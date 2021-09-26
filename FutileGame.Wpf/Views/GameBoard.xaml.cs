@@ -59,7 +59,7 @@ namespace FutileGame.Views
                 {
                     var sqVM = (GameSquareViewModel)btn.Tag;
                     sqVM.WhenAnyValue(v => v.Text).BindTo(btn, b => b.Content).DisposeWith(disposables);
-                    btn.Command = sqVM.Check;
+                    btn.Command = sqVM.Toggle;
                 }
             });
         }

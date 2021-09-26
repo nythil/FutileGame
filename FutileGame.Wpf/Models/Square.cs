@@ -39,6 +39,22 @@ namespace FutileGame.Models
             }
         }
 
+        public bool CanUncheck => Value == 1;
+
+        public void Uncheck()
+        {
+            if (!IsInitialized())
+                throw new InvalidOperationException("object not initialized");
+            if (!CanUncheck)
+                throw new InvalidOperationException("cannot uncheck");
+
+            foreach (var sq in _neighbours)
+            {
+                sq.OnNeighbourUnchecked(this);
+            }
+            Value--;
+        }
+
         private void OnNeighbourChecked(Square which)
         {
             if (!_neighbours.Contains(which))
@@ -47,6 +63,17 @@ namespace FutileGame.Models
             if (Value > 0)
             {
                 Value++;
+            }
+        }
+
+        private void OnNeighbourUnchecked(Square which)
+        {
+            if (!_neighbours.Contains(which))
+                throw new InvalidOperationException("invalid neighbour");
+
+            if (Value > 0)
+            {
+                Value--;
             }
         }
 

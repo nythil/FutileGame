@@ -23,6 +23,26 @@ namespace FutileGame.ViewModels
                 canExecute: _model.WhenAny(m => m.Value, x => x.Sender.CanCheck),
                 execute: () => _model.Check()
             );
+
+            Uncheck = ReactiveCommand.Create(
+                canExecute: _model.WhenAny(m => m.Value, x => x.Sender.CanCheck),
+                execute: () => _model.Uncheck()
+            );
+
+            Toggle = ReactiveCommand.Create(
+                canExecute: _model.WhenAny(m => m.Value, x => x.Sender.CanCheck || x.Sender.CanUncheck),
+                execute: () =>
+                {
+                    if (_model.CanCheck)
+                    {
+                        _model.Check();
+                    }
+                    else if (_model.CanUncheck)
+                    {
+                        _model.Uncheck();
+                    }
+                }
+            );
         }
 
         private static string GetValueText(int x) => x switch
@@ -39,5 +59,7 @@ namespace FutileGame.ViewModels
         public string Text => _text.Value;
 
         public ReactiveCommand<Unit, Unit> Check { get; }
+        public ReactiveCommand<Unit, Unit> Uncheck { get; }
+        public ReactiveCommand<Unit, Unit> Toggle { get; }
     }
 }
