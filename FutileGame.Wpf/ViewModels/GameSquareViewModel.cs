@@ -2,21 +2,25 @@
 using System.Reactive.Linq;
 using System.Reactive.Disposables;
 using ReactiveUI;
+using Splat;
 using FutileGame.Models;
+using FutileGame.Services;
 
 namespace FutileGame.ViewModels
 {
     public class GameSquareViewModel : ReactiveObject
     {
         private readonly Square _model;
+        private readonly ISquareValueFormatter _valueFormatter;
 
-        public GameSquareViewModel(Square m)
+        public GameSquareViewModel(Square m, ISquareValueFormatter valueFormatter = null)
         {
             _model = m;
+            _valueFormatter = valueFormatter ?? Locator.Current.GetService<ISquareValueFormatter>();
 
             _text = _model
                 .WhenAnyValue(x => x.Value)
-                .Select(x => GetValueText(x))
+                .Select(x => _valueFormatter.FormatValue(x))
                 .ToProperty(this, x => x.Text);
 
             Check = ReactiveCommand.Create(
@@ -44,13 +48,6 @@ namespace FutileGame.ViewModels
                 }
             );
         }
-
-        private static string GetValueText(int x) => x switch
-        {
-            0 => "",
-            5 => "1",
-            _ => x.ToString()
-        };
 
         public int RowIndex => _model.RowIndex;
         public int ColumnIndex => _model.ColumnIndex;

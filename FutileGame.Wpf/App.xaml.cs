@@ -5,6 +5,8 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Splat;
+using FutileGame.Services;
 
 namespace FutileGame
 {
@@ -13,5 +15,11 @@ namespace FutileGame
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            Locator.CurrentMutable.Register<ISquareValueFormatter>(() => new DefaultSquareValueFormatter());
+
+            base.OnStartup(e);
+        }
     }
 }
