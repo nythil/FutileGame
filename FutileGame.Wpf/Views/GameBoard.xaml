@@ -1,0 +1,43 @@
+﻿<reactiveui:ReactiveUserControl
+	         x:Class="FutileGame.Views.GameBoard"
+	         x:TypeArguments="viewModels:GameBoardViewModel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:reactiveui="http://reactiveui.net"
+             xmlns:local="clr-namespace:FutileGame"
+             xmlns:viewModels="clr-namespace:FutileGame.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="400">
+    <Grid x:Name="myGrid">
+        <Grid.Resources>
+            <Style TargetType="Button">
+                <Setter Property="Padding" Value="10"/>
+                <Setter Property="Margin" Value="1"/>
+                <Setter Property="MinWidth" Value="40"/>
+                <Setter Property="MinHeight" Value="40"/>
+                <Setter Property="FontSize" Value="26"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Button Grid.Row="0" Grid.Column="0"></Button>
+        <Button Grid.Row="0" Grid.Column="1">1</Button>
+        <Button Grid.Row="0" Grid.Column="2"></Button>
+        <Button Grid.Row="1" Grid.Column="0">1</Button>
+        <Button Grid.Row="1" Grid.Column="1">1</Button>
+        <Button Grid.Row="1" Grid.Column="2">1</Button>
+        <Button Grid.Row="2" Grid.Column="0"></Button>
+        <Button Grid.Row="2" Grid.Column="1">1</Button>
+        <Button Grid.Row="2" Grid.Column="2"></Button>
+    </Grid>
+</reactiveui:ReactiveUserControl>
