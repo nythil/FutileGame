@@ -6,7 +6,16 @@
         xmlns:views="clr-namespace:FutileGame.Views"
         mc:Ignorable="d"
         Title="Futile game" Height="450" Width="800">
-	<Grid>
-		<views:GameBoard Width="400" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" />
-	</Grid>
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <views:GameBoard Grid.Column="0"/>
+        <StackPanel Grid.Column="2" Orientation="Vertical">
+            <TextBlock TextAlignment="Center" FontSize="18" Margin="0,0,0,5">Objective</TextBlock>
+            <views:ObjectiveBoard/>
+        </StackPanel>
+    </Grid>
 </Window>
