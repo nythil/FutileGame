@@ -20,7 +20,7 @@ namespace FutileGame.ViewModels
                 .ToProperty(this, x => x.Text);
 
             Check = ReactiveCommand.Create(
-                canExecute: _model.CanCheck,
+                canExecute: _model.WhenAny(m => m.Value, x => x.Sender.CanCheck),
                 execute: () => _model.Check()
             );
         }

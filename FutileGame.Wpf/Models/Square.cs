@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reactive.Linq;
 using ReactiveUI;
 
 namespace FutileGame.Models
@@ -20,25 +18,32 @@ namespace FutileGame.Models
         private readonly List<Square> _neighbours = new(4);
         public void SetNeighbours(IEnumerable<Square> neighbours)
         {
-            Debug.Assert(_neighbours.Count == 0);
+            if (IsInitialized())
+                throw new InvalidOperationException("object already initialized");
             _neighbours.AddRange(neighbours);
         }
 
-        public IObservable<bool> CanCheck => this.WhenAnyValue(x => x.Value).Select(v => v == 0);
+        public bool CanCheck => Value == 0;
 
         public void Check()
         {
-            Debug.Assert(Value == 0);
-            Debug.Assert(_neighbours.Count > 0);
+            if (!IsInitialized())
+                throw new InvalidOperationException("object not initialized");
+            if (!CanCheck)
+                throw new InvalidOperationException("square already checked");
+
             Value++;
             foreach (var sq in _neighbours)
             {
-                sq.Increment();
+                sq.OnNeighbourChecked(this);
             }
         }
 
-        private void Increment()
+        private void OnNeighbourChecked(Square which)
         {
+            if (!_neighbours.Contains(which))
+                throw new InvalidOperationException("invalid neighbour");
+
             if (Value > 0)
             {
                 Value++;
@@ -49,7 +54,9 @@ namespace FutileGame.Models
         public int Value
         {
             get => _value;
-            set => this.RaiseAndSetIfChanged(ref _value, value);
+            private set => this.RaiseAndSetIfChanged(ref _value, value);
         }
+
+        private bool IsInitialized() => _neighbours.Count > 0;
     }
 }
