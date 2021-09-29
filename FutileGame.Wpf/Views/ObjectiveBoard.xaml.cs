@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ReactiveUI;
 using FutileGame.ViewModels;
+using FutileGame.Services;
 
 namespace FutileGame.Views
 {
@@ -27,7 +28,7 @@ namespace FutileGame.Views
         public ObjectiveBoard()
         {
             InitializeComponent();
-            ViewModel = new(5, 5);
+            ViewModel = new(5, 5, new DefaultSquareValueFormatter());
 
             myGrid.RowDefinitions.Clear();
             for (int y = 0; y < ViewModel.RowCount; y++)

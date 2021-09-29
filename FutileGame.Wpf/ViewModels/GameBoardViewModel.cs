@@ -4,6 +4,7 @@ using System.Diagnostics;
 using ReactiveUI;
 using System.Linq;
 using FutileGame.Models;
+using FutileGame.Services;
 
 namespace FutileGame.ViewModels
 {
@@ -11,15 +12,15 @@ namespace FutileGame.ViewModels
     {
         private readonly Board _model;
 
-        public GameBoardViewModel(int numRows, int numColumns)
-            : this(new Board(numRows, numColumns))
+        public GameBoardViewModel(int numRows, int numColumns, ISquareValueFormatter valueFormatter = null)
+            : this(new Board(numRows, numColumns), valueFormatter)
         {
         }
 
-        public GameBoardViewModel(Board model)
+        public GameBoardViewModel(Board model, ISquareValueFormatter valueFormatter = null)
         {
             _model = model;
-            _squares = _model.Squares.Select(sq => new GameSquareViewModel(sq)).ToList();
+            _squares = _model.Squares.Select(sq => new GameSquareViewModel(sq, valueFormatter)).ToList();
         }
 
         public int RowCount => _model.RowCount;

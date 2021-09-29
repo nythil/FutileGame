@@ -1,4 +1,5 @@
-﻿using System.Reactive;
+﻿using System;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Disposables;
 using ReactiveUI;
@@ -17,6 +18,10 @@ namespace FutileGame.ViewModels
         {
             _model = m;
             _valueFormatter = valueFormatter ?? Locator.Current.GetService<ISquareValueFormatter>();
+            if (_model is null)
+                throw new ArgumentNullException(nameof(m));
+            if (_valueFormatter is null)
+                throw new ArgumentNullException(nameof(valueFormatter));
 
             _text = _model
                 .WhenAnyValue(x => x.Value)
