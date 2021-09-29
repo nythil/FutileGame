@@ -12,17 +12,38 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ReactiveUI;
+using Splat;
+using FutileGame.ViewModels;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Reactive.Disposables;
+using FutileGame.Services;
 
 namespace FutileGame
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         public MainWindow()
         {
             InitializeComponent();
+            ViewModel = new MainWindowViewModel(5, 5, new DefaultSquareValueFormatter());
+
+            this.WhenActivated(disposable =>
+            {
+                this.OneWayBind(ViewModel,
+                    viewModel => viewModel.GameBoard,
+                    view => view.gameView.ViewModel
+                ).DisposeWith(disposable);
+
+                this.OneWayBind(ViewModel,
+                    viewModel => viewModel.ObjectiveBoard,
+                    view => view.objectiveView.ViewModel
+                ).DisposeWith(disposable);
+            });
         }
     }
 }

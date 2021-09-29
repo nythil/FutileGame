@@ -30,6 +30,16 @@ namespace FutileGame.Views
             InitializeComponent();
             ViewModel = new(5, 5, new DefaultSquareValueFormatter());
 
+            this.WhenActivated(disposables =>
+            {
+                this.WhenAnyValue(x => x.ViewModel)
+                    .Subscribe(_ => UpdateBoardView())
+                    .DisposeWith(disposables);
+            });
+        }
+
+        private void UpdateBoardView()
+        {
             myGrid.RowDefinitions.Clear();
             for (int y = 0; y < ViewModel.RowCount; y++)
             {
@@ -47,7 +57,7 @@ namespace FutileGame.Views
             {
                 var btn = new Label
                 {
-                    Content = sqVM.Text
+                    Content = sqVM.Text,
                 };
                 Grid.SetRow(btn, sqVM.RowIndex);
                 Grid.SetColumn(btn, sqVM.ColumnIndex);

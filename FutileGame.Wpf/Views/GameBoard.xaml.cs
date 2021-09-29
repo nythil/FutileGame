@@ -30,6 +30,16 @@ namespace FutileGame.Views
             InitializeComponent();
             ViewModel = new(5, 5, new DefaultSquareValueFormatter());
 
+            this.WhenActivated(disposables =>
+            {
+                this.WhenAnyValue(x => x.ViewModel)
+                    .Subscribe(_ => UpdateBoardView(disposables))
+                    .DisposeWith(disposables);
+            });
+        }
+
+        private void UpdateBoardView(CompositeDisposable disposables)
+        {
             myGrid.RowDefinitions.Clear();
             for (int y = 0; y < ViewModel.RowCount; y++)
             {
@@ -47,22 +57,15 @@ namespace FutileGame.Views
             {
                 var btn = new Button
                 {
-                    Tag = sqVM
+                    Command = sqVM.Toggle,
                 };
                 Grid.SetRow(btn, sqVM.RowIndex);
                 Grid.SetColumn(btn, sqVM.ColumnIndex);
+                sqVM.WhenAnyValue(v => v.Text)
+                    .BindTo(btn, b => b.Content)
+                    .DisposeWith(disposables);
                 myGrid.Children.Add(btn);
             }
-
-            this.WhenActivated(disposables =>
-            {
-                foreach (var btn in myGrid.Children.OfType<Button>())
-                {
-                    var sqVM = (GameSquareViewModel)btn.Tag;
-                    sqVM.WhenAnyValue(v => v.Text).BindTo(btn, b => b.Content).DisposeWith(disposables);
-                    btn.Command = sqVM.Toggle;
-                }
-            });
         }
     }
 }
