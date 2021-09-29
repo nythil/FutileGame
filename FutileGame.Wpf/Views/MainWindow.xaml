@@ -30,6 +30,7 @@
         <views:ObjectiveBoard Grid.Column="2" Grid.Row="1" x:Name="objectiveView"/>
 
         <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Margin="1,1,1,5">
+            <Button x:Name="btnGenerate" Padding="3 10">New objective</Button>
         </StackPanel>
     </Grid>
 </reactiveui:ReactiveWindow>

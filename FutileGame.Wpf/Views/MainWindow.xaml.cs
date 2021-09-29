@@ -43,6 +43,11 @@ namespace FutileGame
                     viewModel => viewModel.ObjectiveBoard,
                     view => view.objectiveView.ViewModel
                 ).DisposeWith(disposable);
+
+                this.BindCommand(ViewModel,
+                    viewModel => viewModel.GenerateObjective,
+                    view => view.btnGenerate
+                ).DisposeWith(disposable);
             });
         }
     }
