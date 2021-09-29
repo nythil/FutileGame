@@ -1,9 +1,11 @@
 ﻿<Application x:Class="FutileGame.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:FutileGame"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
-         
+        <SolidColorBrush x:Key="Background1" Color="#4C0079CD"/>
+        <SolidColorBrush x:Key="Background2" Color="#4C018738"/>
+        <SolidColorBrush x:Key="Background3" Color="#4CFF3508"/>
+        <SolidColorBrush x:Key="Background4" Color="#4CEAB605"/>
     </Application.Resources>
 </Application>
