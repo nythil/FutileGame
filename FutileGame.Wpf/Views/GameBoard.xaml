@@ -50,17 +50,7 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid x:Name="myGrid">
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+    <UniformGrid x:Name="myGrid" Rows="3" Columns="3">
         <Button Grid.Row="0" Grid.Column="0"></Button>
         <Button Grid.Row="0" Grid.Column="1">1</Button>
         <Button Grid.Row="0" Grid.Column="2"></Button>
@@ -70,5 +60,5 @@
         <Button Grid.Row="2" Grid.Column="0"></Button>
         <Button Grid.Row="2" Grid.Column="1">1</Button>
         <Button Grid.Row="2" Grid.Column="2"></Button>
-    </Grid>
+    </UniformGrid>
 </reactiveui:ReactiveUserControl>

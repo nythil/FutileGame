@@ -40,17 +40,8 @@ namespace FutileGame.Views
 
         private void UpdateBoardView(CompositeDisposable disposables)
         {
-            myGrid.RowDefinitions.Clear();
-            for (int y = 0; y < ViewModel.RowCount; y++)
-            {
-                myGrid.RowDefinitions.Add(new());
-            }
-
-            myGrid.ColumnDefinitions.Clear();
-            for (int x = 0; x < ViewModel.ColumnCount; x++)
-            {
-                myGrid.ColumnDefinitions.Add(new());
-            }
+            myGrid.Rows = ViewModel.RowCount;
+            myGrid.Columns = ViewModel.ColumnCount;
 
             myGrid.Children.Clear();
             foreach (var sqVM in ViewModel.Squares)
