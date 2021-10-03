@@ -32,11 +32,11 @@ namespace FutileGame.Models
             if (!CanCheck)
                 throw new InvalidOperationException("square already checked");
 
-            Value++;
             foreach (var sq in _neighbours)
             {
                 sq.OnNeighbourChecked(this);
             }
+            Value++;
         }
 
         public bool CanUncheck => Value == 1;
