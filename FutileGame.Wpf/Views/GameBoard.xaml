@@ -10,16 +10,47 @@
              xmlns:viewModels="clr-namespace:FutileGame.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="MinWidth" Value="40"/>
+            <Setter Property="MinHeight" Value="40"/>
+            <Setter Property="FontSize" Value="26"/>
+            <Setter Property="BorderBrush" Value="#505050"/>
+            <Setter Property="Background" Value="#e6e6e6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Content" Value="1">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Square.Background1}"/>
+                            </Trigger>
+                            <Trigger Property="Content" Value="2">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Square.Background2}"/>
+                            </Trigger>
+                            <Trigger Property="Content" Value="3">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Square.Background3}"/>
+                            </Trigger>
+                            <Trigger Property="Content" Value="4">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Square.Background4}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="#BEE4FF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="#C4E5F6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid x:Name="myGrid">
-        <Grid.Resources>
-            <Style TargetType="Button">
-                <Setter Property="Padding" Value="10"/>
-                <Setter Property="Margin" Value="1"/>
-                <Setter Property="MinWidth" Value="40"/>
-                <Setter Property="MinHeight" Value="40"/>
-                <Setter Property="FontSize" Value="26"/>
-            </Style>
-        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>

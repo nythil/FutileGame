@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
-        <SolidColorBrush x:Key="Background1" Color="#4C0079CD"/>
-        <SolidColorBrush x:Key="Background2" Color="#4C018738"/>
-        <SolidColorBrush x:Key="Background3" Color="#4CFF3508"/>
-        <SolidColorBrush x:Key="Background4" Color="#4CEAB605"/>
+        <SolidColorBrush x:Key="Square.Background1" Color="#B3D7F0"/>
+        <SolidColorBrush x:Key="Square.Background2" Color="#A6DBBB"/>
+        <SolidColorBrush x:Key="Square.Background3" Color="#FFC2B5"/>
+        <SolidColorBrush x:Key="Square.Background4" Color="#F9E9B4"/>
     </Application.Resources>
 </Application>

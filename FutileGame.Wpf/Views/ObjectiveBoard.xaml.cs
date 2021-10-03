@@ -58,14 +58,6 @@ namespace FutileGame.Views
                 var btn = new Label
                 {
                     Content = sqVM.Text,
-                    Background = sqVM.Text switch
-                    {
-                        "1" => (Brush)FindResource("Background1"),
-                        "2" => (Brush)FindResource("Background2"),
-                        "3" => (Brush)FindResource("Background3"),
-                        "4" => (Brush)FindResource("Background4"),
-                        _ => (Brush)null,
-                    },
                 };
                 Grid.SetRow(btn, sqVM.RowIndex);
                 Grid.SetColumn(btn, sqVM.ColumnIndex);

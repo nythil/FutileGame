@@ -10,19 +10,46 @@
              xmlns:viewModels="clr-namespace:FutileGame.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400">
+    <UserControl.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="MinWidth" Value="40"/>
+            <Setter Property="MinHeight" Value="40"/>
+            <Setter Property="FontSize" Value="26"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Background" Value="#ffffff"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Label">
+                        <Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Content" Value="1">
+                                <Setter Property="Background" Value="{StaticResource Square.Background1}"/>
+                            </Trigger>
+                            <Trigger Property="Content" Value="2">
+                                <Setter Property="Background" Value="{StaticResource Square.Background2}"/>
+                            </Trigger>
+                            <Trigger Property="Content" Value="3">
+                                <Setter Property="Background" Value="{StaticResource Square.Background3}"/>
+                            </Trigger>
+                            <Trigger Property="Content" Value="4">
+                                <Setter Property="Background" Value="{StaticResource Square.Background4}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    
     <Grid x:Name="myGrid" Background="White">
         <Grid.Resources>
-            <Style TargetType="Label">
-                <Setter Property="Padding" Value="10"/>
-                <Setter Property="Margin" Value="1"/>
-                <Setter Property="MinWidth" Value="40"/>
-                <Setter Property="MinHeight" Value="40"/>
-                <Setter Property="FontSize" Value="26"/>
-                <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="BorderBrush" Value="Black"/>
-            </Style>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -35,13 +62,13 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Label Grid.Row="0" Grid.Column="0"></Label>
-        <Label Grid.Row="0" Grid.Column="1" Background="{StaticResource Background2}">2</Label>
-        <Label Grid.Row="0" Grid.Column="2" Background="{StaticResource Background3}">3</Label>
-        <Label Grid.Row="1" Grid.Column="0" Background="{StaticResource Background1}">1</Label>
-        <Label Grid.Row="1" Grid.Column="1" Background="{StaticResource Background4}">4</Label>
-        <Label Grid.Row="1" Grid.Column="2" Background="{StaticResource Background1}">1</Label>
+        <Label Grid.Row="0" Grid.Column="1">2</Label>
+        <Label Grid.Row="0" Grid.Column="2">3</Label>
+        <Label Grid.Row="1" Grid.Column="0">1</Label>
+        <Label Grid.Row="1" Grid.Column="1">4</Label>
+        <Label Grid.Row="1" Grid.Column="2">1</Label>
         <Label Grid.Row="2" Grid.Column="0"></Label>
-        <Label Grid.Row="2" Grid.Column="1" Background="{StaticResource Background1}">1</Label>
+        <Label Grid.Row="2" Grid.Column="1">1</Label>
         <Label Grid.Row="2" Grid.Column="2"></Label>
     </Grid>
 </reactiveui:ReactiveUserControl>
