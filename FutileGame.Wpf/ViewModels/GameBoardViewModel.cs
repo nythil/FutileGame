@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Reactive.Disposables;
-using System.Diagnostics;
-using ReactiveUI;
+﻿using System;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Reactive.Disposables;
+using System.Collections.Generic;
+using ReactiveUI;
 using FutileGame.Models;
 using FutileGame.Services;
 
@@ -21,6 +23,13 @@ namespace FutileGame.ViewModels
         {
             _model = model;
             _squares = _model.Squares.Select(sq => new GameSquareViewModel(sq, valueFormatter)).ToList();
+
+            SquareToggledObs = _squares
+                .Select(sq => sq.WhenAny(vm => vm.IsChecked, change => change.Sender))
+                .Merge()
+                .Publish()
+                .RefCount()
+            ;
         }
 
         public int RowCount => _model.RowCount;
@@ -28,5 +37,7 @@ namespace FutileGame.ViewModels
 
         private readonly List<GameSquareViewModel> _squares;
         public IReadOnlyCollection<GameSquareViewModel> Squares => _squares;
+
+        public IObservable<GameSquareViewModel> SquareToggledObs { get; }
     }
 }

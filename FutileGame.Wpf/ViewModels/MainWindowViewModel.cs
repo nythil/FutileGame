@@ -1,41 +1,70 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
+using System.Reactive.Disposables;
 using ReactiveUI;
 using Splat;
 using FutileGame.Services;
+using FutileGame.Models;
 
 namespace FutileGame.ViewModels
 {
     public class MainWindowViewModel : ReactiveObject
     {
-        public MainWindowViewModel(int numRows, int numColumns, ISquareValueFormatter valueFormatter = null)
-        {
-            _gameBoard = new GameBoardViewModel(numRows, numColumns, valueFormatter);
-            _objectiveBoard = new ObjectiveBoardViewModel(numRows, numColumns, valueFormatter);
+        private readonly Game _game;
+        private readonly IObjectiveGenerator _objectiveGenerator;
+        private readonly SerialDisposable _victorySub = new();
 
-            GenerateObjective = ReactiveCommand.Create(() =>
+        public MainWindowViewModel(int numRows, int numColumns, ISquareValueFormatter valueFormatter = null, IObjectiveGenerator objectiveGenerator = null)
+        {
+            _game = new Game(numRows, numColumns);
+            _objectiveGenerator = objectiveGenerator ?? Locator.Current.GetService<IObjectiveGenerator>();
+
+            _playerBoard = _game
+                .WhenAnyValue(g => g.PlayerBoard)
+                .Select(g => new GameBoardViewModel(g, valueFormatter))
+                .ToProperty(this, x => x.PlayerBoard);
+
+            _objectiveBoard = _game
+                .WhenAnyValue(g => g.ObjectiveBoard)
+                .Select(g => new ObjectiveBoardViewModel(g, valueFormatter))
+                .ToProperty(this, x => x.ObjectiveBoard);
+
+            StartGame = ReactiveCommand.Create(() =>
             {
-                var generator = Locator.Current.GetService<IObjectiveGenerator>();
-                var board = generator.Generate(numRows, numColumns, numRows * numColumns / 2);
-                ObjectiveBoard = new(board, valueFormatter);
-                GameBoard = new(numRows, numColumns, valueFormatter);
+                IsGameStarted = false;
+                _game.StartNewGame(_objectiveGenerator);
+                IsGameStarted = true;
             });
+
+            _victorySub.Disposable = this
+                .WhenAnyObservable(vm => vm.PlayerBoard.SquareToggledObs)
+                .Any(_ => _game.IsVictoryAchieved())
+                .Subscribe(async _ =>
+                {
+                    IsGameStarted = false;
+                    var startNewGame = await GameEnded.Handle(true);
+                    if (startNewGame)
+                        Observable.Return(Unit.Default).InvokeCommand(StartGame);
+                });
         }
 
-        private GameBoardViewModel _gameBoard;
-        public GameBoardViewModel GameBoard
+        private bool _isGameStarted = false;
+        public bool IsGameStarted
         {
-            get => _gameBoard;
-            private set => this.RaiseAndSetIfChanged(ref _gameBoard, value);
+            get => _isGameStarted;
+            private set => this.RaiseAndSetIfChanged(ref _isGameStarted, value);
         }
 
-        private ObjectiveBoardViewModel _objectiveBoard;
-        public ObjectiveBoardViewModel ObjectiveBoard
-        {
-            get => _objectiveBoard;
-            private set => this.RaiseAndSetIfChanged(ref _objectiveBoard, value);
-        }
+        private readonly ObservableAsPropertyHelper<GameBoardViewModel> _playerBoard;
+        public GameBoardViewModel PlayerBoard => _playerBoard.Value;
 
-        public ReactiveCommand<Unit, Unit> GenerateObjective { get; }
+        private readonly ObservableAsPropertyHelper<ObjectiveBoardViewModel> _objectiveBoard;
+        public ObjectiveBoardViewModel ObjectiveBoard => _objectiveBoard.Value;
+
+        public ReactiveCommand<Unit, Unit> StartGame { get; }
+
+        public Interaction<bool, bool> GameEnded { get; } = new();
     }
 }

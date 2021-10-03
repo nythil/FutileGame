@@ -28,6 +28,11 @@ namespace FutileGame.ViewModels
                 .Select(x => _valueFormatter.FormatValue(x))
                 .ToProperty(this, x => x.Text);
 
+            _isChecked = _model
+                .WhenAny(x => x.Value, x => x.Sender.IsChecked)
+                .DistinctUntilChanged()
+                .ToProperty(this, x => x.IsChecked);
+
             Check = ReactiveCommand.Create(
                 canExecute: _model.WhenAny(m => m.Value, x => x.Sender.CanCheck),
                 execute: () => _model.Check()
@@ -59,6 +64,9 @@ namespace FutileGame.ViewModels
 
         private readonly ObservableAsPropertyHelper<string> _text;
         public string Text => _text.Value;
+
+        private readonly ObservableAsPropertyHelper<bool> _isChecked;
+        public bool IsChecked => _isChecked.Value;
 
         public ReactiveCommand<Unit, Unit> Check { get; }
         public ReactiveCommand<Unit, Unit> Uncheck { get; }

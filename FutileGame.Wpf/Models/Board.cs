@@ -74,5 +74,7 @@ namespace FutileGame.Models
         {
             return HashCode.Combine(RowCount, ColumnCount, Squares);
         }
+
+        public bool IsAnyChecked => Squares.Any(x => x.IsChecked);
     }
 }

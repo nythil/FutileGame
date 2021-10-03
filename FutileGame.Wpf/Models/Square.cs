@@ -23,6 +23,8 @@ namespace FutileGame.Models
             _neighbours.AddRange(neighbours);
         }
 
+        public bool IsChecked => Value != 0;
+
         public bool CanCheck => Value == 0;
 
         public void Check()
