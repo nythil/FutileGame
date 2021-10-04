@@ -35,7 +35,7 @@ namespace FutileGame
             this.WhenActivated(disposable =>
             {
                 this.OneWayBind(ViewModel,
-                    viewModel => viewModel.GameBoard,
+                    viewModel => viewModel.PlayerBoard,
                     view => view.gameView.ViewModel
                 ).DisposeWith(disposable);
 
@@ -45,8 +45,32 @@ namespace FutileGame
                 ).DisposeWith(disposable);
 
                 this.BindCommand(ViewModel,
-                    viewModel => viewModel.GenerateObjective,
-                    view => view.btnGenerate
+                    viewModel => viewModel.StartGame,
+                    view => view.btnStartGame
+                ).DisposeWith(disposable);
+
+                this.OneWayBind(ViewModel,
+                    viewModel => viewModel.IsGameStarted,
+                    view => view.gameView.IsEnabled
+                ).DisposeWith(disposable);
+
+                this.BindInteraction(ViewModel,
+                    viewModel => viewModel.GameEnded,
+                    context =>
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            var result = MessageBox.Show(
+                                this,
+                                "Play again?",
+                                "Victory!",
+                                MessageBoxButton.YesNo,
+                                MessageBoxImage.Question
+                            );
+                            context.SetOutput(result == MessageBoxResult.Yes);
+                        });
+                        return Observable.Return(Unit.Default);
+                    }
                 ).DisposeWith(disposable);
             });
         }

@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using ReactiveUI;
 
 namespace FutileGame.Models
 {
-    public sealed class Board : ReactiveObject
+    public sealed class Board : ReactiveObject, IEquatable<Board>
     {
         public Board(int numRows, int numColumns)
         {
@@ -58,5 +59,22 @@ namespace FutileGame.Models
             neighbours.Add(GetSquare(row + 1, column));
             return neighbours.Where(sq => sq is not null);
         }
+
+        public override bool Equals(object obj) => Equals(obj as Board);
+
+        public bool Equals(Board other)
+        {
+            return other != null &&
+                   RowCount == other.RowCount &&
+                   ColumnCount == other.ColumnCount &&
+                   Enumerable.SequenceEqual(Squares, other.Squares);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(RowCount, ColumnCount, Squares);
+        }
+
+        public bool IsAnyChecked => Squares.Any(x => x.IsChecked);
     }
 }

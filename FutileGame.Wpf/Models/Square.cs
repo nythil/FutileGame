@@ -4,7 +4,7 @@ using ReactiveUI;
 
 namespace FutileGame.Models
 {
-    public sealed class Square : ReactiveObject
+    public sealed class Square : ReactiveObject, IEquatable<Square>
     {
         public int RowIndex { get; }
         public int ColumnIndex { get; }
@@ -23,6 +23,8 @@ namespace FutileGame.Models
             _neighbours.AddRange(neighbours);
         }
 
+        public bool IsChecked => Value != 0;
+
         public bool CanCheck => Value == 0;
 
         public void Check()
@@ -32,11 +34,11 @@ namespace FutileGame.Models
             if (!CanCheck)
                 throw new InvalidOperationException("square already checked");
 
-            Value++;
             foreach (var sq in _neighbours)
             {
                 sq.OnNeighbourChecked(this);
             }
+            Value++;
         }
 
         public bool CanUncheck => Value == 1;
@@ -85,5 +87,20 @@ namespace FutileGame.Models
         }
 
         private bool IsInitialized() => _neighbours.Count > 0;
+
+        public override bool Equals(object obj) => Equals(obj as Square);
+
+        public bool Equals(Square other)
+        {
+            return other != null &&
+                   RowIndex == other.RowIndex &&
+                   ColumnIndex == other.ColumnIndex &&
+                   Value == other.Value;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(RowIndex, ColumnIndex, Value);
+        }
     }
 }
