@@ -4,7 +4,7 @@ using ReactiveUI;
 
 namespace FutileGame.Models
 {
-    public sealed class Square : ReactiveObject
+    public sealed class Square : ReactiveObject, IEquatable<Square>
     {
         public int RowIndex { get; }
         public int ColumnIndex { get; }
@@ -85,5 +85,20 @@ namespace FutileGame.Models
         }
 
         private bool IsInitialized() => _neighbours.Count > 0;
+
+        public override bool Equals(object obj) => Equals(obj as Square);
+
+        public bool Equals(Square other)
+        {
+            return other != null &&
+                   RowIndex == other.RowIndex &&
+                   ColumnIndex == other.ColumnIndex &&
+                   Value == other.Value;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(RowIndex, ColumnIndex, Value);
+        }
     }
 }
