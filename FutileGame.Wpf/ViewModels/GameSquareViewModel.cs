@@ -32,16 +32,6 @@ namespace FutileGame.ViewModels
                 .WhenAnyValue(x => x.IsChecked)
                 .ToProperty(this, x => x.IsChecked);
 
-            Check = ReactiveCommand.Create(
-                canExecute: _model.WhenAnyValue(m => m.CanCheck),
-                execute: () => _model.Check()
-            );
-
-            Uncheck = ReactiveCommand.Create(
-                canExecute: _model.WhenAnyValue(m => m.CanUncheck),
-                execute: () => _model.Uncheck()
-            );
-
             Toggle = ReactiveCommand.Create(
                 canExecute: _model.WhenAnyValue(
                     m => m.CanCheck, m => m.CanUncheck,
@@ -70,8 +60,6 @@ namespace FutileGame.ViewModels
         private readonly ObservableAsPropertyHelper<bool> _isChecked;
         public bool IsChecked => _isChecked.Value;
 
-        public ReactiveCommand<Unit, Unit> Check { get; }
-        public ReactiveCommand<Unit, Unit> Uncheck { get; }
         public ReactiveCommand<Unit, Unit> Toggle { get; }
     }
 }
