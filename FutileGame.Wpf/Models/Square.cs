@@ -32,7 +32,7 @@ namespace FutileGame.Models
         private readonly List<Square> _neighbours = new(4);
         public void SetNeighbours(IEnumerable<Square> neighbours)
         {
-            if (IsInitialized())
+            if (IsInitialized)
                 throw new InvalidOperationException("object already initialized");
             _neighbours.AddRange(neighbours);
         }
@@ -48,7 +48,7 @@ namespace FutileGame.Models
 
         public void Check()
         {
-            if (!IsInitialized())
+            if (!IsInitialized)
                 throw new InvalidOperationException("object not initialized");
             if (!CanCheck)
                 throw new InvalidOperationException("square already checked");
@@ -57,12 +57,12 @@ namespace FutileGame.Models
             {
                 sq.OnNeighbourChecked(this);
             }
-            Value++;
+            Value = 1;
         }
 
         public void Uncheck()
         {
-            if (!IsInitialized())
+            if (!IsInitialized)
                 throw new InvalidOperationException("object not initialized");
             if (!CanUncheck)
                 throw new InvalidOperationException("cannot uncheck");
@@ -71,7 +71,7 @@ namespace FutileGame.Models
             {
                 sq.OnNeighbourUnchecked(this);
             }
-            Value--;
+            Value = 0;
         }
 
         private void OnNeighbourChecked(Square which)
@@ -79,7 +79,7 @@ namespace FutileGame.Models
             if (!_neighbours.Contains(which))
                 throw new InvalidOperationException("invalid neighbour");
 
-            if (Value > 0)
+            if (IsChecked)
             {
                 Value++;
             }
@@ -90,7 +90,7 @@ namespace FutileGame.Models
             if (!_neighbours.Contains(which))
                 throw new InvalidOperationException("invalid neighbour");
 
-            if (Value > 0)
+            if (IsChecked)
             {
                 Value--;
             }
@@ -103,7 +103,7 @@ namespace FutileGame.Models
             private set => this.RaiseAndSetIfChanged(ref _value, value);
         }
 
-        private bool IsInitialized() => _neighbours.Count > 0;
+        private bool IsInitialized => _neighbours.Count > 0;
 
         public override bool Equals(object obj) => Equals(obj as Square);
 
