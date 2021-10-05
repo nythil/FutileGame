@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Collections.Generic;
 using ReactiveUI;
 
@@ -13,6 +15,18 @@ namespace FutileGame.Models
         {
             RowIndex = row;
             ColumnIndex = column;
+
+            _isChecked = this
+                .WhenAnyValue(x => x.Value, v => v != 0)
+                .ToProperty(this, x => x.IsChecked, scheduler: ImmediateScheduler.Instance);
+
+            _canCheck = this
+                .WhenAnyValue(x => x.Value, v => v == 0)
+                .ToProperty(this, x => x.CanCheck, scheduler: ImmediateScheduler.Instance);
+
+            _canUncheck = this
+                .WhenAnyValue(x => x.Value, v => v == 1)
+                .ToProperty(this, x => x.CanUncheck, scheduler: ImmediateScheduler.Instance);
         }
 
         private readonly List<Square> _neighbours = new(4);
@@ -23,9 +37,14 @@ namespace FutileGame.Models
             _neighbours.AddRange(neighbours);
         }
 
-        public bool IsChecked => Value != 0;
+        private readonly ObservableAsPropertyHelper<bool> _isChecked;
+        public bool IsChecked => _isChecked.Value;
 
-        public bool CanCheck => Value == 0;
+        private readonly ObservableAsPropertyHelper<bool> _canCheck;
+        public bool CanCheck => _canCheck.Value;
+
+        private readonly ObservableAsPropertyHelper<bool> _canUncheck;
+        public bool CanUncheck => _canUncheck.Value;
 
         public void Check()
         {
@@ -40,8 +59,6 @@ namespace FutileGame.Models
             }
             Value++;
         }
-
-        public bool CanUncheck => Value == 1;
 
         public void Uncheck()
         {

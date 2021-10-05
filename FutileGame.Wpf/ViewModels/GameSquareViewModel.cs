@@ -29,22 +29,24 @@ namespace FutileGame.ViewModels
                 .ToProperty(this, x => x.Text);
 
             _isChecked = _model
-                .WhenAny(x => x.Value, x => x.Sender.IsChecked)
-                .DistinctUntilChanged()
+                .WhenAnyValue(x => x.IsChecked)
                 .ToProperty(this, x => x.IsChecked);
 
             Check = ReactiveCommand.Create(
-                canExecute: _model.WhenAny(m => m.Value, x => x.Sender.CanCheck),
+                canExecute: _model.WhenAnyValue(m => m.CanCheck),
                 execute: () => _model.Check()
             );
 
             Uncheck = ReactiveCommand.Create(
-                canExecute: _model.WhenAny(m => m.Value, x => x.Sender.CanCheck),
+                canExecute: _model.WhenAnyValue(m => m.CanUncheck),
                 execute: () => _model.Uncheck()
             );
 
             Toggle = ReactiveCommand.Create(
-                canExecute: _model.WhenAny(m => m.Value, x => x.Sender.CanCheck || x.Sender.CanUncheck),
+                canExecute: _model.WhenAnyValue(
+                    m => m.CanCheck, m => m.CanUncheck,
+                    (canCheck, canUncheck) => canCheck || canUncheck
+                ),
                 execute: () =>
                 {
                     if (_model.CanCheck)
