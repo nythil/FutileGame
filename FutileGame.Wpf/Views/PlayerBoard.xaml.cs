@@ -21,11 +21,11 @@ using FutileGame.Services;
 namespace FutileGame.Views
 {
     /// <summary>
-    /// Interaction logic for GameBoard.xaml
+    /// Interaction logic for PlayerBoard.xaml
     /// </summary>
-    public partial class GameBoard
+    public partial class PlayerBoard
     {
-        public GameBoard()
+        public PlayerBoard()
         {
             InitializeComponent();
             ViewModel = new(5, 5, new DefaultSquareValueFormatter());

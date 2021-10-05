@@ -36,12 +36,12 @@ namespace FutileGame
             {
                 this.OneWayBind(ViewModel,
                     viewModel => viewModel.PlayerBoard,
-                    view => view.gameView.ViewModel
+                    view => view.playerBoard.ViewModel
                 ).DisposeWith(disposable);
 
                 this.OneWayBind(ViewModel,
                     viewModel => viewModel.ObjectiveBoard,
-                    view => view.objectiveView.ViewModel
+                    view => view.objectiveBoard.ViewModel
                 ).DisposeWith(disposable);
 
                 this.BindCommand(ViewModel,
@@ -51,7 +51,7 @@ namespace FutileGame
 
                 this.OneWayBind(ViewModel,
                     viewModel => viewModel.IsGameStarted,
-                    view => view.gameView.IsEnabled
+                    view => view.playerBoard.IsEnabled
                 ).DisposeWith(disposable);
 
                 this.BindInteraction(ViewModel,

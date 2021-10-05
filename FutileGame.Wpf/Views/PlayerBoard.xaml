@@ -1,6 +1,6 @@
 ﻿<reactiveui:ReactiveUserControl
-	         x:Class="FutileGame.Views.GameBoard"
-	         x:TypeArguments="viewModels:GameBoardViewModel"
+	         x:Class="FutileGame.Views.PlayerBoard"
+	         x:TypeArguments="viewModels:PlayerBoardViewModel"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

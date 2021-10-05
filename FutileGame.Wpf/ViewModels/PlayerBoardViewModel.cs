@@ -10,19 +10,19 @@ using FutileGame.Services;
 
 namespace FutileGame.ViewModels
 {
-    public class GameBoardViewModel : ReactiveObject
+    public class PlayerBoardViewModel : ReactiveObject
     {
         private readonly Board _model;
 
-        public GameBoardViewModel(int numRows, int numColumns, ISquareValueFormatter valueFormatter = null)
+        public PlayerBoardViewModel(int numRows, int numColumns, ISquareValueFormatter valueFormatter = null)
             : this(new Board(numRows, numColumns), valueFormatter)
         {
         }
 
-        public GameBoardViewModel(Board model, ISquareValueFormatter valueFormatter = null)
+        public PlayerBoardViewModel(Board model, ISquareValueFormatter valueFormatter = null)
         {
             _model = model;
-            _squares = _model.Squares.Select(sq => new GameSquareViewModel(sq, valueFormatter)).ToList();
+            _squares = _model.Squares.Select(sq => new PlayerSquareViewModel(sq, valueFormatter)).ToList();
 
             SquareToggledObs = _squares
                 .Select(sq => sq.WhenAny(vm => vm.IsChecked, change => change.Sender))
@@ -35,9 +35,9 @@ namespace FutileGame.ViewModels
         public int RowCount => _model.RowCount;
         public int ColumnCount => _model.ColumnCount;
 
-        private readonly List<GameSquareViewModel> _squares;
-        public IReadOnlyCollection<GameSquareViewModel> Squares => _squares;
+        private readonly List<PlayerSquareViewModel> _squares;
+        public IReadOnlyCollection<PlayerSquareViewModel> Squares => _squares;
 
-        public IObservable<GameSquareViewModel> SquareToggledObs { get; }
+        public IObservable<PlayerSquareViewModel> SquareToggledObs { get; }
     }
 }

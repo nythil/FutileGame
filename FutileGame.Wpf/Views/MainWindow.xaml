@@ -22,14 +22,14 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Column="0" Grid.Row="1" VerticalAlignment="Top">
-            <views:GameBoard x:Name="gameView"/>
+            <views:PlayerBoard x:Name="playerBoard"/>
         </Border>
 
         <Border Grid.Column="2" Grid.Row="0" Margin="0 0 0 5">
             <TextBlock TextAlignment="Center" VerticalAlignment="Bottom" FontSize="18">Objective</TextBlock>
         </Border>
 
-        <views:ObjectiveBoard Grid.Column="2" Grid.Row="1" x:Name="objectiveView" VerticalAlignment="Top"/>
+        <views:ObjectiveBoard Grid.Column="2" Grid.Row="1" x:Name="objectiveBoard" VerticalAlignment="Top"/>
 
         <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Margin="1,1,1,5">
             <Button x:Name="btnStartGame" Padding="3 10">Start game</Button>

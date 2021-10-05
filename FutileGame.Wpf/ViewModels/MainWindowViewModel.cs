@@ -23,7 +23,7 @@ namespace FutileGame.ViewModels
 
             _playerBoard = _game
                 .WhenAnyValue(g => g.PlayerBoard)
-                .Select(g => new GameBoardViewModel(g, valueFormatter))
+                .Select(g => new PlayerBoardViewModel(g, valueFormatter))
                 .ToProperty(this, x => x.PlayerBoard);
 
             _objectiveBoard = _game
@@ -57,8 +57,8 @@ namespace FutileGame.ViewModels
             private set => this.RaiseAndSetIfChanged(ref _isGameStarted, value);
         }
 
-        private readonly ObservableAsPropertyHelper<GameBoardViewModel> _playerBoard;
-        public GameBoardViewModel PlayerBoard => _playerBoard.Value;
+        private readonly ObservableAsPropertyHelper<PlayerBoardViewModel> _playerBoard;
+        public PlayerBoardViewModel PlayerBoard => _playerBoard.Value;
 
         private readonly ObservableAsPropertyHelper<ObjectiveBoardViewModel> _objectiveBoard;
         public ObjectiveBoardViewModel ObjectiveBoard => _objectiveBoard.Value;
