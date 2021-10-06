@@ -40,7 +40,7 @@ namespace FutileGame.ViewModels
 
             _victorySub.Disposable = this
                 .WhenAnyObservable(vm => vm.PlayerBoard.SquareToggledObs)
-                .Any(_ => _game.IsVictoryAchieved())
+                .Where(_ => _game.IsVictoryAchieved())
                 .Subscribe(async _ =>
                 {
                     IsGameStarted = false;
