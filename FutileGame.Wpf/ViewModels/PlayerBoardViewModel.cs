@@ -25,7 +25,7 @@ namespace FutileGame.ViewModels
             _squares = _model.Squares.Select(sq => new PlayerSquareViewModel(sq, valueFormatter)).ToList();
 
             SquareToggledObs = _squares
-                .Select(sq => sq.WhenAny(vm => vm.IsChecked, change => change.Sender))
+                .Select(sq => sq.ObservableForProperty(vm => vm.IsChecked, _ => sq))
                 .Merge()
                 .Publish()
                 .RefCount()
