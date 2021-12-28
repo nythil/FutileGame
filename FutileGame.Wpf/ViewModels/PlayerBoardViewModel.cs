@@ -14,17 +14,17 @@ namespace FutileGame.ViewModels
     {
         private readonly Board _model;
 
-        public PlayerBoardViewModel(int numRows, int numColumns, ISquareValueFormatter valueFormatter = null)
+        public PlayerBoardViewModel(int numRows, int numColumns, ITileValueFormatter valueFormatter = null)
             : this(new Board(numRows, numColumns), valueFormatter)
         {
         }
 
-        public PlayerBoardViewModel(Board model, ISquareValueFormatter valueFormatter = null)
+        public PlayerBoardViewModel(Board model, ITileValueFormatter valueFormatter = null)
         {
             _model = model;
-            _squares = _model.Squares.Select(sq => new PlayerSquareViewModel(sq, valueFormatter)).ToList();
+            _tiles = _model.Tiles.Select(sq => new PlayerTileViewModel(sq, valueFormatter)).ToList();
 
-            SquareToggledObs = _squares
+            TileToggledObs = _tiles
                 .Select(sq => sq.ObservableForProperty(vm => vm.IsChecked, _ => sq))
                 .Merge()
                 .Publish()
@@ -35,9 +35,9 @@ namespace FutileGame.ViewModels
         public int RowCount => _model.RowCount;
         public int ColumnCount => _model.ColumnCount;
 
-        private readonly List<PlayerSquareViewModel> _squares;
-        public IReadOnlyCollection<PlayerSquareViewModel> Squares => _squares;
+        private readonly List<PlayerTileViewModel> _tiles;
+        public IReadOnlyCollection<PlayerTileViewModel> Tiles => _tiles;
 
-        public IObservable<PlayerSquareViewModel> SquareToggledObs { get; }
+        public IObservable<PlayerTileViewModel> TileToggledObs { get; }
     }
 }

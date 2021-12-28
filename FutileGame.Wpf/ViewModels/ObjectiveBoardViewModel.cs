@@ -12,21 +12,21 @@ namespace FutileGame.ViewModels
     {
         private readonly Board _model;
 
-        public ObjectiveBoardViewModel(int numRows, int numColumns, ISquareValueFormatter valueFormatter = null)
+        public ObjectiveBoardViewModel(int numRows, int numColumns, ITileValueFormatter valueFormatter = null)
             : this(new Board(numRows, numColumns), valueFormatter)
         {
         }
 
-        public ObjectiveBoardViewModel(Board model, ISquareValueFormatter valueFormatter = null)
+        public ObjectiveBoardViewModel(Board model, ITileValueFormatter valueFormatter = null)
         {
             _model = model;
-            _squares = _model.Squares.Select(sq => new ObjectiveSquareViewModel(sq, valueFormatter)).ToList();
+            _tiles = _model.Tiles.Select(sq => new ObjectiveTileViewModel(sq, valueFormatter)).ToList();
         }
 
         public int RowCount => _model.RowCount;
         public int ColumnCount => _model.ColumnCount;
 
-        private readonly List<ObjectiveSquareViewModel> _squares;
-        public IReadOnlyCollection<ObjectiveSquareViewModel> Squares => _squares;
+        private readonly List<ObjectiveTileViewModel> _tiles;
+        public IReadOnlyCollection<ObjectiveTileViewModel> Tiles => _tiles;
     }
 }

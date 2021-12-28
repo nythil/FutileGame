@@ -6,12 +6,12 @@ using ReactiveUI;
 
 namespace FutileGame.Models
 {
-    public sealed class Square : ReactiveObject, IEquatable<Square>
+    public sealed class Tile : ReactiveObject, IEquatable<Tile>
     {
         public int RowIndex { get; }
         public int ColumnIndex { get; }
 
-        public Square(int row, int column)
+        public Tile(int row, int column)
         {
             RowIndex = row;
             ColumnIndex = column;
@@ -29,8 +29,8 @@ namespace FutileGame.Models
                 .ToProperty(this, x => x.CanUncheck, scheduler: ImmediateScheduler.Instance);
         }
 
-        private readonly List<Square> _neighbours = new(4);
-        public void SetNeighbours(IEnumerable<Square> neighbours)
+        private readonly List<Tile> _neighbours = new(4);
+        public void SetNeighbours(IEnumerable<Tile> neighbours)
         {
             if (IsInitialized)
                 throw new InvalidOperationException("object already initialized");
@@ -51,7 +51,7 @@ namespace FutileGame.Models
             if (!IsInitialized)
                 throw new InvalidOperationException("object not initialized");
             if (!CanCheck)
-                throw new InvalidOperationException("square already checked");
+                throw new InvalidOperationException("tile already checked");
 
             foreach (var sq in _neighbours)
             {
@@ -74,7 +74,7 @@ namespace FutileGame.Models
             Value = 0;
         }
 
-        private void OnNeighbourChecked(Square which)
+        private void OnNeighbourChecked(Tile which)
         {
             if (!_neighbours.Contains(which))
                 throw new InvalidOperationException("invalid neighbour");
@@ -85,7 +85,7 @@ namespace FutileGame.Models
             }
         }
 
-        private void OnNeighbourUnchecked(Square which)
+        private void OnNeighbourUnchecked(Tile which)
         {
             if (!_neighbours.Contains(which))
                 throw new InvalidOperationException("invalid neighbour");
@@ -105,9 +105,9 @@ namespace FutileGame.Models
 
         private bool IsInitialized => _neighbours.Count > 0;
 
-        public override bool Equals(object obj) => Equals(obj as Square);
+        public override bool Equals(object obj) => Equals(obj as Tile);
 
-        public bool Equals(Square other)
+        public bool Equals(Tile other)
         {
             return other != null &&
                    RowIndex == other.RowIndex &&

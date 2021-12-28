@@ -26,16 +26,16 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="Content" Value="1">
-                                <Setter Property="Background" Value="{StaticResource Square.Background1}"/>
+                                <Setter Property="Background" Value="{StaticResource Tile.Background1}"/>
                             </Trigger>
                             <Trigger Property="Content" Value="2">
-                                <Setter Property="Background" Value="{StaticResource Square.Background2}"/>
+                                <Setter Property="Background" Value="{StaticResource Tile.Background2}"/>
                             </Trigger>
                             <Trigger Property="Content" Value="3">
-                                <Setter Property="Background" Value="{StaticResource Square.Background3}"/>
+                                <Setter Property="Background" Value="{StaticResource Tile.Background3}"/>
                             </Trigger>
                             <Trigger Property="Content" Value="4">
-                                <Setter Property="Background" Value="{StaticResource Square.Background4}"/>
+                                <Setter Property="Background" Value="{StaticResource Tile.Background4}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

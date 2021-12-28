@@ -20,13 +20,13 @@ namespace FutileGame.Services
         public Board Generate(int numRows, int numColumns, int numRounds)
         {
             var board = new Board(numRows, numColumns);
-            var squares = board.Squares.ToList();
+            var tiles = board.Tiles.ToList();
 
             for (int i = 0; i < numRounds; i++)
             {
-                var index = _random.Next(squares.Count);
-                squares[index].Check();
-                squares.RemoveAt(index);
+                var index = _random.Next(tiles.Count);
+                tiles[index].Check();
+                tiles.RemoveAt(index);
             }
 
             return board;

@@ -16,7 +16,7 @@ namespace FutileGame.ViewModels
         private readonly IObjectiveGenerator _objectiveGenerator;
         private readonly SerialDisposable _victorySub = new();
 
-        public MainWindowViewModel(int numRows, int numColumns, ISquareValueFormatter valueFormatter = null, IObjectiveGenerator objectiveGenerator = null)
+        public MainWindowViewModel(int numRows, int numColumns, ITileValueFormatter valueFormatter = null, IObjectiveGenerator objectiveGenerator = null)
         {
             _game = new Game(numRows, numColumns);
             _objectiveGenerator = objectiveGenerator ?? Locator.Current.GetService<IObjectiveGenerator>();
@@ -39,7 +39,7 @@ namespace FutileGame.ViewModels
             });
 
             _victorySub.Disposable = this
-                .WhenAnyObservable(vm => vm.PlayerBoard.SquareToggledObs)
+                .WhenAnyObservable(vm => vm.PlayerBoard.TileToggledObs)
                 .Where(_ => _game.IsVictoryAchieved())
                 .Subscribe(async _ =>
                 {

@@ -17,7 +17,7 @@ namespace FutileGame
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            Locator.CurrentMutable.Register<ISquareValueFormatter>(() => new DefaultSquareValueFormatter());
+            Locator.CurrentMutable.Register<ITileValueFormatter>(() => new DefaultTileValueFormatter());
             Locator.CurrentMutable.Register<IObjectiveGenerator>(() => new ObjectiveGenerator());
 
             base.OnStartup(e);

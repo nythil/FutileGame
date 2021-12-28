@@ -9,15 +9,15 @@ using FutileGame.Services;
 
 namespace FutileGame.ViewModels
 {
-    public class PlayerSquareViewModel : ReactiveObject
+    public class PlayerTileViewModel : ReactiveObject
     {
-        private readonly Square _model;
-        private readonly ISquareValueFormatter _valueFormatter;
+        private readonly Tile _model;
+        private readonly ITileValueFormatter _valueFormatter;
 
-        public PlayerSquareViewModel(Square m, ISquareValueFormatter valueFormatter = null)
+        public PlayerTileViewModel(Tile m, ITileValueFormatter valueFormatter = null)
         {
             _model = m;
-            _valueFormatter = valueFormatter ?? Locator.Current.GetService<ISquareValueFormatter>();
+            _valueFormatter = valueFormatter ?? Locator.Current.GetService<ITileValueFormatter>();
             if (_model is null)
                 throw new ArgumentNullException(nameof(m));
             if (_valueFormatter is null)

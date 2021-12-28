@@ -13,16 +13,16 @@ namespace FutileGame.Models
             RowCount = numRows;
             ColumnCount = numColumns;
 
-            _squares = new List<Square>(numRows * numColumns);
+            _tiles = new List<Tile>(numRows * numColumns);
             for (int r = 0; r < RowCount; r++)
             {
                 for (int c = 0; c < ColumnCount; c++)
                 {
-                    _squares.Add(new(r, c));
+                    _tiles.Add(new(r, c));
                 }
             }
 
-            foreach (var sq in _squares)
+            foreach (var sq in _tiles)
             {
                 sq.SetNeighbours(GetNeighbours(sq.RowIndex, sq.ColumnIndex));
             }
@@ -31,32 +31,32 @@ namespace FutileGame.Models
         public int RowCount { get; }
         public int ColumnCount { get; }
 
-        private readonly List<Square> _squares;
-        public IReadOnlyCollection<Square> Squares => _squares;
+        private readonly List<Tile> _tiles;
+        public IReadOnlyCollection<Tile> Tiles => _tiles;
 
-        public Square GetSquare(int row, int column)
+        public Tile GetTile(int row, int column)
         {
             if ((0 <= row && row < RowCount) && (0 <= column && column < ColumnCount))
             {
-                return GetSquareCore(row, column);
+                return GetTileCore(row, column);
             }
             return null;
         }
 
-        private Square GetSquareCore(int row, int column)
+        private Tile GetTileCore(int row, int column)
         {
             Debug.Assert(0 <= row && row < RowCount);
             Debug.Assert(0 <= column && column < ColumnCount);
-            return _squares[column + row * ColumnCount];
+            return _tiles[column + row * ColumnCount];
         }
 
-        public IEnumerable<Square> GetNeighbours(int row, int column)
+        public IEnumerable<Tile> GetNeighbours(int row, int column)
         {
-            var neighbours = new List<Square>(4);
-            neighbours.Add(GetSquare(row, column - 1));
-            neighbours.Add(GetSquare(row, column + 1));
-            neighbours.Add(GetSquare(row - 1, column));
-            neighbours.Add(GetSquare(row + 1, column));
+            var neighbours = new List<Tile>(4);
+            neighbours.Add(GetTile(row, column - 1));
+            neighbours.Add(GetTile(row, column + 1));
+            neighbours.Add(GetTile(row - 1, column));
+            neighbours.Add(GetTile(row + 1, column));
             return neighbours.Where(sq => sq is not null);
         }
 
@@ -67,14 +67,14 @@ namespace FutileGame.Models
             return other != null &&
                    RowCount == other.RowCount &&
                    ColumnCount == other.ColumnCount &&
-                   Enumerable.SequenceEqual(Squares, other.Squares);
+                   Enumerable.SequenceEqual(Tiles, other.Tiles);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(RowCount, ColumnCount, Squares);
+            return HashCode.Combine(RowCount, ColumnCount, Tiles);
         }
 
-        public bool IsAnyChecked => Squares.Any(x => x.IsChecked);
+        public bool IsAnyChecked => Tiles.Any(x => x.IsChecked);
     }
 }

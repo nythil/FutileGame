@@ -1,11 +1,11 @@
 ﻿namespace FutileGame.Services
 {
-    public interface ISquareValueFormatter
+    public interface ITileValueFormatter
     {
         string FormatValue(int value);
     }
 
-    public class DefaultSquareValueFormatter : ISquareValueFormatter
+    public class DefaultTileValueFormatter : ITileValueFormatter
     {
         public string FormatValue(int value) => value switch
         {

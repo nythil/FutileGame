@@ -30,7 +30,7 @@ namespace FutileGame
         public MainWindow()
         {
             InitializeComponent();
-            ViewModel = new MainWindowViewModel(5, 5, new DefaultSquareValueFormatter());
+            ViewModel = new MainWindowViewModel(5, 5, new DefaultTileValueFormatter());
 
             this.WhenActivated(disposable =>
             {

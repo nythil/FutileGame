@@ -28,7 +28,7 @@ namespace FutileGame.Views
         public ObjectiveBoard()
         {
             InitializeComponent();
-            ViewModel = new(5, 5, new DefaultSquareValueFormatter());
+            ViewModel = new(5, 5, new DefaultTileValueFormatter());
 
             this.WhenActivated(disposables =>
             {
@@ -44,7 +44,7 @@ namespace FutileGame.Views
             myGrid.Columns = ViewModel.ColumnCount;
 
             myGrid.Children.Clear();
-            foreach (var sqVM in ViewModel.Squares)
+            foreach (var sqVM in ViewModel.Tiles)
             {
                 var btn = new Label
                 {
