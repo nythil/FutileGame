@@ -13,28 +13,27 @@ namespace FutileGame.ViewModels
     public class MainWindowViewModel : ReactiveObject
     {
         private readonly Game _game;
-        private readonly IObjectiveGenerator _objectiveGenerator;
         private readonly SerialDisposable _victorySub = new();
 
         public MainWindowViewModel(int numRows, int numColumns, ITileValueFormatter valueFormatter = null, IObjectiveGenerator objectiveGenerator = null)
         {
-            _game = new Game(numRows, numColumns);
-            _objectiveGenerator = objectiveGenerator ?? Locator.Current.GetService<IObjectiveGenerator>();
+            objectiveGenerator ??= Locator.Current.GetService<IObjectiveGenerator>();
+            _game = new Game(numRows, numColumns, objectiveGenerator);
 
             _playerBoard = _game
-                .WhenAnyValue(g => g.PlayerBoard)
-                .Select(g => new PlayerBoardViewModel(g, valueFormatter))
+                .WhenAnyValue(g => g.Round.PlayerBoard)
+                .Select(b => new PlayerBoardViewModel(b, valueFormatter))
                 .ToProperty(this, x => x.PlayerBoard);
 
             _objectiveBoard = _game
-                .WhenAnyValue(g => g.ObjectiveBoard)
-                .Select(g => new ObjectiveBoardViewModel(g, valueFormatter))
+                .WhenAnyValue(g => g.Round.ObjectiveBoard)
+                .Select(b => new ObjectiveBoardViewModel(b, valueFormatter))
                 .ToProperty(this, x => x.ObjectiveBoard);
 
             StartGame = ReactiveCommand.Create(() =>
             {
                 IsGameStarted = false;
-                _game.StartNewGame(_objectiveGenerator);
+                _game.StartNewRound();
                 IsGameStarted = true;
             });
 

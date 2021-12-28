@@ -28,6 +28,16 @@ namespace FutileGame.Models
             }
         }
 
+        public static Board Empty(int numRows, int numColumns)
+        {
+            return new Board(numRows, numColumns);
+        }
+
+        public static Board EmptyLike(Board board)
+        {
+            return Empty(board.RowCount, board.ColumnCount);
+        }
+
         public int RowCount { get; }
         public int ColumnCount { get; }
 

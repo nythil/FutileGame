@@ -1,44 +1,42 @@
-﻿using ReactiveUI;
+﻿using System;
+using ReactiveUI;
 using FutileGame.Services;
 
 namespace FutileGame.Models
 {
     public sealed class Game : ReactiveObject
     {
-        public Game(int numRows, int numColumns)
+        private readonly IObjectiveGenerator _objectiveGenerator;
+
+        public Game(int numRows, int numColumns, IObjectiveGenerator objectiveGenerator)
         {
-            _objectiveBoard = new(numRows, numColumns);
-            _playerBoard = new(numRows, numColumns);
+            _objectiveGenerator = objectiveGenerator;
+            if (_objectiveGenerator is null)
+                throw new ArgumentNullException(nameof(objectiveGenerator));
+            RowCount = numRows;
+            ColumnCount = numColumns;
         }
 
-        private Board _objectiveBoard;
-        public Board ObjectiveBoard
-        {
-            get => _objectiveBoard;
-            private set => this.RaiseAndSetIfChanged(ref _objectiveBoard, value);
-        }
+        public int RowCount { get; }
+        public int ColumnCount { get; }
 
-        private Board _playerBoard;
-        public Board PlayerBoard
+        private Round _round;
+        public Round Round
         {
-            get => _playerBoard;
-            private set => this.RaiseAndSetIfChanged(ref _playerBoard, value);
+            get => _round;
+            private set => this.RaiseAndSetIfChanged(ref _round, value);
         }
 
         public bool IsVictoryAchieved()
         {
-            return _playerBoard.IsAnyChecked && _playerBoard.Equals(_objectiveBoard);
+            return _round.IsVictoryAchieved();
         }
 
-        public void StartNewGame(IObjectiveGenerator objectiveGenerator)
+        public void StartNewRound()
         {
-            using (this.DelayChangeNotifications())
-            {
-                var rowCount = ObjectiveBoard.RowCount;
-                var columnCount = ObjectiveBoard.ColumnCount;
-                ObjectiveBoard = objectiveGenerator.Generate(rowCount, columnCount, 15);
-                PlayerBoard = new(rowCount, columnCount);
-            }
+            var numSteps = RowCount * ColumnCount / 2 + 1;
+            var objective = _objectiveGenerator.Generate(RowCount, ColumnCount, numSteps);
+            this.Round = new(objective);
         }
     }
 }

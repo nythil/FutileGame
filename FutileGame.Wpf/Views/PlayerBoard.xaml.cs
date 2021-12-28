@@ -40,6 +40,9 @@ namespace FutileGame.Views
 
         private void UpdateBoardView(CompositeDisposable disposables)
         {
+            if (ViewModel is null)
+                return;
+
             myGrid.Rows = ViewModel.RowCount;
             myGrid.Columns = ViewModel.ColumnCount;
 
