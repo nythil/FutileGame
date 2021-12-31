@@ -12,4 +12,8 @@
     <PackageReference Include="Splat" Version="13.1.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FutileGame.Core\FutileGame.Core.csproj" />
+  </ItemGroup>
+
 </Project>
