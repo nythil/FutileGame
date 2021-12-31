@@ -1,24 +1,27 @@
-﻿using ReactiveUI;
+﻿using System;
+using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 
 namespace FutileGame.Models
 {
-    public sealed class Round : ReactiveObject
+    public sealed class Round
     {
         public Round(Board objectiveBoard)
         {
-            _objectiveBoard = objectiveBoard;
-            _playerBoard = Board.EmptyLike(_objectiveBoard);
+            ObjectiveBoard = objectiveBoard;
+            PlayerBoard = Board.EmptyLike(ObjectiveBoard);
         }
 
-        private readonly Board _objectiveBoard;
-        public Board ObjectiveBoard => _objectiveBoard;
+        public Board ObjectiveBoard { get; }
+        public Board PlayerBoard { get; }
 
-        private readonly Board _playerBoard;
-        public Board PlayerBoard => _playerBoard;
+        public bool IsVictoryAchieved => PlayerBoard.IsAnyChecked && PlayerBoard.Equals(ObjectiveBoard);
 
-        public bool IsVictoryAchieved()
+        public IObservable<bool> IsVictoryAchievedChanges
         {
-            return _playerBoard.IsAnyChecked && _playerBoard.Equals(_objectiveBoard);
+            get => PlayerBoard.TileCheckedChanges.StartWith(null as Tile).Select(_ => IsVictoryAchieved).DistinctUntilChanged();
         }
     }
 }

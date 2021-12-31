@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -20,15 +21,15 @@ namespace FutileGame.ViewModels
             objectiveGenerator ??= Locator.Current.GetService<IObjectiveGenerator>();
             _game = new Game(numRows, numColumns, objectiveGenerator);
 
-            _playerBoard = _game
-                .WhenAnyValue(g => g.Round.PlayerBoard)
-                .Select(b => new PlayerBoardViewModel(b, valueFormatter))
-                .ToProperty(this, x => x.PlayerBoard);
+            _playerBoard = _game.RoundChanges
+                .WhereNotNull()
+                .Select(r => new PlayerBoardViewModel(r.PlayerBoard, valueFormatter))
+                .ToProperty(this, x => x.PlayerBoard, null as PlayerBoardViewModel);
 
-            _objectiveBoard = _game
-                .WhenAnyValue(g => g.Round.ObjectiveBoard)
-                .Select(b => new ObjectiveBoardViewModel(b, valueFormatter))
-                .ToProperty(this, x => x.ObjectiveBoard);
+            _objectiveBoard = _game.RoundChanges
+                .WhereNotNull()
+                .Select(r => new ObjectiveBoardViewModel(r.ObjectiveBoard, valueFormatter))
+                .ToProperty(this, x => x.ObjectiveBoard, null as ObjectiveBoardViewModel);
 
             StartGame = ReactiveCommand.Create(() =>
             {
@@ -37,9 +38,10 @@ namespace FutileGame.ViewModels
                 IsGameStarted = true;
             });
 
-            _victorySub.Disposable = this
-                .WhenAnyObservable(vm => vm.PlayerBoard.TileToggledObs)
-                .Where(_ => _game.IsVictoryAchieved())
+            _victorySub.Disposable = _game.RoundChanges
+                .WhereNotNull()
+                .Select(r => r.IsVictoryAchievedChanges.SkipWhile(isVictory => !isVictory))
+                .Switch()
                 .Subscribe(async _ =>
                 {
                     IsGameStarted = false;

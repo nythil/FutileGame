@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Reactive.Disposables;
 using ReactiveUI;
 using Splat;
 using FutileGame.Models;
@@ -23,20 +22,15 @@ namespace FutileGame.ViewModels
             if (_valueFormatter is null)
                 throw new ArgumentNullException(nameof(valueFormatter));
 
-            _text = _model
-                .WhenAnyValue(x => x.Value)
-                .Select(x => _valueFormatter.FormatValue(x))
+            _text = _model.ValueChanges
+                .Select(t => _valueFormatter.FormatValue(t))
                 .ToProperty(this, x => x.Text);
 
-            _isChecked = _model
-                .WhenAnyValue(x => x.IsChecked)
+            _isChecked = _model.IsCheckedChanges
                 .ToProperty(this, x => x.IsChecked);
 
             Toggle = ReactiveCommand.Create(
-                canExecute: _model.WhenAnyValue(
-                    m => m.CanCheck, m => m.CanUncheck,
-                    (canCheck, canUncheck) => canCheck || canUncheck
-                ),
+                canExecute: Observable.CombineLatest(_model.CanCheckChanges, _model.CanUncheckChanges, (canC, canU) => canC || canU),
                 execute: () =>
                 {
                     if (_model.CanCheck)

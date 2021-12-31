@@ -1,10 +1,12 @@
 ﻿using System;
-using ReactiveUI;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using FutileGame.Services;
 
 namespace FutileGame.Models
 {
-    public sealed class Game : ReactiveObject
+    public sealed class Game
     {
         private readonly IObjectiveGenerator _objectiveGenerator;
 
@@ -15,22 +17,24 @@ namespace FutileGame.Models
                 throw new ArgumentNullException(nameof(objectiveGenerator));
             RowCount = numRows;
             ColumnCount = numColumns;
+            _roundChanges = new(null);
         }
 
         public int RowCount { get; }
         public int ColumnCount { get; }
 
-        private Round _round;
         public Round Round
         {
-            get => _round;
-            private set => this.RaiseAndSetIfChanged(ref _round, value);
+            get => _roundChanges.Value;
+            private set => _roundChanges.OnNext(value);
         }
 
-        public bool IsVictoryAchieved()
-        {
-            return _round.IsVictoryAchieved();
-        }
+        private readonly BehaviorSubject<Round> _roundChanges;
+        public IObservable<Round> RoundChanges => _roundChanges.AsObservable();
+
+        public bool IsVictoryAchieved => this.Round.IsVictoryAchieved;
+
+        public IObservable<bool> IsVictoryAchievedChanges => this.Round.IsVictoryAchievedChanges;
 
         public void StartNewRound()
         {
