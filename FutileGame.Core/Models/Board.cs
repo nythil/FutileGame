@@ -86,6 +86,11 @@ namespace FutileGame.Models
             yield return GetTile(row + 1, column);
         }
 
+        public void Freeze()
+        {
+            _tiles.ForEach(t => t.Freeze());
+        }
+
         public override bool Equals(object obj) => Equals(obj as Board);
 
         public bool Equals(Board other)

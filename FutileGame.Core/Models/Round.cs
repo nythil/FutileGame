@@ -10,6 +10,7 @@ namespace FutileGame.Models
     {
         public Round(Board objectiveBoard)
         {
+            objectiveBoard.Freeze();
             ObjectiveBoard = objectiveBoard;
             PlayerBoard = Board.EmptyLike(ObjectiveBoard);
         }

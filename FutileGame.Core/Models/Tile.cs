@@ -67,6 +67,11 @@ namespace FutileGame.Models
             }
         }
 
+        public void Freeze()
+        {
+            _valueChanges.OnCompleted();
+        }
+
         public override bool Equals(object obj) => Equals(obj as Tile);
 
         public bool Equals(Tile other)
