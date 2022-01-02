@@ -32,10 +32,6 @@ namespace FutileGame.Models
         private readonly BehaviorSubject<Round> _roundChanges;
         public IObservable<Round> RoundChanges => _roundChanges.AsObservable();
 
-        public bool IsVictoryAchieved => this.Round.IsVictoryAchieved;
-
-        public IObservable<bool> IsVictoryAchievedChanges => this.Round.IsVictoryAchievedChanges;
-
         public void StartNewRound()
         {
             var numSteps = RowCount * ColumnCount / 2 + 1;

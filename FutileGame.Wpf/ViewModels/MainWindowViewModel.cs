@@ -14,49 +14,53 @@ namespace FutileGame.ViewModels
     public class MainWindowViewModel : ReactiveObject
     {
         private readonly Game _game;
-        private readonly SerialDisposable _victorySub = new();
+        private readonly CompositeDisposable _disposables = new();
 
         public MainWindowViewModel(int numRows, int numColumns, ITileValueFormatter valueFormatter = null, IObjectiveGenerator objectiveGenerator = null)
         {
             objectiveGenerator ??= Locator.Current.GetService<IObjectiveGenerator>();
+            valueFormatter ??= Locator.Current.GetService<ITileValueFormatter>();
             _game = new Game(numRows, numColumns, objectiveGenerator);
 
-            _playerBoard = _game.RoundChanges
-                .WhereNotNull()
-                .Select(r => new PlayerBoardViewModel(r.PlayerBoard, valueFormatter))
-                .ToProperty(this, x => x.PlayerBoard, null as PlayerBoardViewModel);
+            var roundSeq = _game.RoundChanges
+                .Select(r => r is null ? null : new RoundViewModel(r, valueFormatter))
+                .Publish();
 
-            _objectiveBoard = _game.RoundChanges
-                .WhereNotNull()
-                .Select(r => new ObjectiveBoardViewModel(r.ObjectiveBoard, valueFormatter))
-                .ToProperty(this, x => x.ObjectiveBoard, null as ObjectiveBoardViewModel);
+            _playerBoard = roundSeq
+                .Select(r => r?.PlayerBoard)
+                .ToProperty(this, x => x.PlayerBoard);
+
+            _objectiveBoard = roundSeq
+                .Select(r => r?.ObjectiveBoard)
+                .ToProperty(this, x => x.ObjectiveBoard);
 
             StartGame = ReactiveCommand.Create(() =>
             {
-                IsGameStarted = false;
                 _game.StartNewRound();
-                IsGameStarted = true;
             });
 
-            _victorySub.Disposable = _game.RoundChanges
+            _isGameStarted = roundSeq
                 .WhereNotNull()
-                .Select(r => r.IsVictoryAchievedChanges.SkipWhile(isVictory => !isVictory))
+                .Select(r => r.IsVictoryAchievedSeq.IsEmpty().StartWith(true))
                 .Switch()
-                .Subscribe(async _ =>
+                .ToProperty(this, x => x.IsGameStarted, () => false);
+
+            _disposables.Add(roundSeq
+                .WhereNotNull()
+                .Select(r => r.IsVictoryAchievedSeq)
+                .Switch()
+                .Subscribe(async isVictory =>
                 {
-                    IsGameStarted = false;
-                    var startNewGame = await GameEnded.Handle(true);
+                    var startNewGame = await GameEnded.Handle(isVictory);
                     if (startNewGame)
                         Observable.Return(Unit.Default).InvokeCommand(StartGame);
-                });
+                }));
+
+            _disposables.Add(roundSeq.Connect());
         }
 
-        private bool _isGameStarted = false;
-        public bool IsGameStarted
-        {
-            get => _isGameStarted;
-            private set => this.RaiseAndSetIfChanged(ref _isGameStarted, value);
-        }
+        private readonly ObservableAsPropertyHelper<bool> _isGameStarted;
+        public bool IsGameStarted => _isGameStarted.Value;
 
         private readonly ObservableAsPropertyHelper<PlayerBoardViewModel> _playerBoard;
         public PlayerBoardViewModel PlayerBoard => _playerBoard.Value;
