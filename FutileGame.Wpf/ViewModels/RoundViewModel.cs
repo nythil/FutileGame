@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reactive;
+using System.Reactive.Linq;
 using ReactiveUI;
 using FutileGame.Services;
 using FutileGame.Models;
@@ -17,7 +19,14 @@ namespace FutileGame.ViewModels
 
             PlayerBoard = new PlayerBoardViewModel(_round.PlayerBoard, valueFormatter);
             ObjectiveBoard = new ObjectiveBoardViewModel(_round.ObjectiveBoard, valueFormatter);
+
+            _isStarted = _round
+                .IsVictoryAchievedSeq.IsEmpty()
+                .ToProperty(this, x => x.IsStarted, () => true);
         }
+
+        private readonly ObservableAsPropertyHelper<bool> _isStarted;
+        public bool IsStarted => _isStarted.Value;
 
         public PlayerBoardViewModel PlayerBoard { get; }
         public ObjectiveBoardViewModel ObjectiveBoard { get; }

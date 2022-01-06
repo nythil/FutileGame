@@ -35,12 +35,12 @@ namespace FutileGame
             this.WhenActivated(disposable =>
             {
                 this.OneWayBind(ViewModel,
-                    viewModel => viewModel.PlayerBoard,
+                    viewModel => viewModel.Round.PlayerBoard,
                     view => view.playerBoard.ViewModel
                 ).DisposeWith(disposable);
 
                 this.OneWayBind(ViewModel,
-                    viewModel => viewModel.ObjectiveBoard,
+                    viewModel => viewModel.Round.ObjectiveBoard,
                     view => view.objectiveBoard.ViewModel
                 ).DisposeWith(disposable);
 
@@ -50,7 +50,7 @@ namespace FutileGame
                 ).DisposeWith(disposable);
 
                 this.OneWayBind(ViewModel,
-                    viewModel => viewModel.IsGameStarted,
+                    viewModel => viewModel.IsRoundStarted,
                     view => view.playerBoard.IsEnabled
                 ).DisposeWith(disposable);
 

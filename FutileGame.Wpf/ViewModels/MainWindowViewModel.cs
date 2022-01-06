@@ -22,51 +22,35 @@ namespace FutileGame.ViewModels
             valueFormatter ??= Locator.Current.GetService<ITileValueFormatter>();
             _game = new Game(numRows, numColumns, objectiveGenerator);
 
-            var roundSeq = _game.RoundChanges
+            _round = _game.RoundChanges
                 .Select(r => r is null ? null : new RoundViewModel(r, valueFormatter))
-                .Publish();
+                .ToProperty(this, x => x.Round);
 
-            _playerBoard = roundSeq
-                .Select(r => r?.PlayerBoard)
-                .ToProperty(this, x => x.PlayerBoard);
-
-            _objectiveBoard = roundSeq
-                .Select(r => r?.ObjectiveBoard)
-                .ToProperty(this, x => x.ObjectiveBoard);
+            _isRoundStarted = this
+                .WhenAnyValue(x => x.Round.IsStarted)
+                .StartWith(Round?.IsStarted ?? false)
+                .ToProperty(this, x => x.IsRoundStarted);
 
             StartGame = ReactiveCommand.Create(() =>
             {
                 _game.StartNewRound();
             });
 
-            _isGameStarted = roundSeq
-                .WhereNotNull()
-                .Select(r => r.IsVictoryAchievedSeq.IsEmpty().StartWith(true))
-                .Switch()
-                .ToProperty(this, x => x.IsGameStarted, () => false);
-
-            _disposables.Add(roundSeq
-                .WhereNotNull()
-                .Select(r => r.IsVictoryAchievedSeq)
-                .Switch()
+            _disposables.Add(this
+                .WhenAnyObservable(x => x.Round.IsVictoryAchievedSeq)
                 .Subscribe(async isVictory =>
                 {
                     var startNewGame = await GameEnded.Handle(isVictory);
                     if (startNewGame)
                         Observable.Return(Unit.Default).InvokeCommand(StartGame);
                 }));
-
-            _disposables.Add(roundSeq.Connect());
         }
 
-        private readonly ObservableAsPropertyHelper<bool> _isGameStarted;
-        public bool IsGameStarted => _isGameStarted.Value;
+        private readonly ObservableAsPropertyHelper<RoundViewModel> _round;
+        public RoundViewModel Round => _round.Value;
 
-        private readonly ObservableAsPropertyHelper<PlayerBoardViewModel> _playerBoard;
-        public PlayerBoardViewModel PlayerBoard => _playerBoard.Value;
-
-        private readonly ObservableAsPropertyHelper<ObjectiveBoardViewModel> _objectiveBoard;
-        public ObjectiveBoardViewModel ObjectiveBoard => _objectiveBoard.Value;
+        private readonly ObservableAsPropertyHelper<bool> _isRoundStarted;
+        public bool IsRoundStarted => _isRoundStarted.Value;
 
         public ReactiveCommand<Unit, Unit> StartGame { get; }
 
