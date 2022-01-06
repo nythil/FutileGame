@@ -9,27 +9,31 @@ namespace FutileGame.Models
     {
         private const int kTimePerTile = 3;
 
+        private readonly CountdownTimer _timer;
+
         public Round(Board objectiveBoard)
         {
             objectiveBoard.Freeze();
             ObjectiveBoard = objectiveBoard;
             PlayerBoard = Board.EmptyLike(ObjectiveBoard);
 
-            var roundTime = ObjectiveBoard.CheckedCount * kTimePerTile;
-            DueTime = DateTime.Now + TimeSpan.FromSeconds(roundTime);
+            _timer = new(ObjectiveBoard.CheckedCount * kTimePerTile);
+            _timer.Start();
 
-            IsVictoryAchievedSeq = PlayerBoard.TileCheckedChanges
+            IsVictoryAchievedSeq = PlayerBoard
+                .TileCheckedChanges
                 .StartWith(null as Tile)
                 .Any(_ => IsVictoryAchieved)
-                .Timeout(DueTime, Observable.Return(false));
+                .Do(_ => _timer.Stop())
+                .Amb(_timer.TimeoutSeq.Select(_ => false));
         }
-
-        public DateTime DueTime { get; }
 
         public Board ObjectiveBoard { get; }
         public Board PlayerBoard { get; }
 
         public bool IsVictoryAchieved => PlayerBoard.IsAnyChecked && PlayerBoard.Equals(ObjectiveBoard);
         public IObservable<bool> IsVictoryAchievedSeq { get; }
+
+        public double GetRemainingTime() => _timer.GetRemainingTime();
     }
 }

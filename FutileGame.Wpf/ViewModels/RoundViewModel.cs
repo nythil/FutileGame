@@ -27,8 +27,7 @@ namespace FutileGame.ViewModels
 
             _timeRemaining = Observable
                 .Interval(TimeSpan.FromMilliseconds(73))
-                .Select(_ => DateTime.Now)
-                .Select(now => Math.Max(0, (_round.DueTime - now).TotalSeconds))
+                .Select(_ => _round.GetRemainingTime())
                 .TakeUntil(t => t == 0 || _round.IsVictoryAchieved)
                 .ObserveOnDispatcher()
                 .ToProperty(this, x => x.TimeRemaining);
