@@ -40,18 +40,18 @@ namespace FutileGame
                 ).DisposeWith(disposable);
 
                 this.OneWayBind(ViewModel,
+                    viewModel => viewModel.IsRoundStarted,
+                    view => view.playerBoard.IsEnabled
+                ).DisposeWith(disposable);
+
+                this.OneWayBind(ViewModel,
                     viewModel => viewModel.Round.ObjectiveBoard,
                     view => view.objectiveBoard.ViewModel
                 ).DisposeWith(disposable);
 
                 this.BindCommand(ViewModel,
-                    viewModel => viewModel.StartGame,
-                    view => view.btnStartGame
-                ).DisposeWith(disposable);
-
-                this.OneWayBind(ViewModel,
-                    viewModel => viewModel.IsRoundStarted,
-                    view => view.playerBoard.IsEnabled
+                    viewModel => viewModel.NewGame,
+                    view => view.btnNewGame
                 ).DisposeWith(disposable);
 
                 this.BindInteraction(ViewModel,

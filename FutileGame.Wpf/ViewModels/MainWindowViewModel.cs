@@ -31,7 +31,7 @@ namespace FutileGame.ViewModels
                 .StartWith(Round?.IsStarted ?? false)
                 .ToProperty(this, x => x.IsRoundStarted);
 
-            StartGame = ReactiveCommand.Create(() =>
+            NewGame = ReactiveCommand.Create(() =>
             {
                 _game.StartNewRound();
             });
@@ -42,7 +42,7 @@ namespace FutileGame.ViewModels
                 {
                     var startNewGame = await GameEnded.Handle(isVictory);
                     if (startNewGame)
-                        Observable.Return(Unit.Default).InvokeCommand(StartGame);
+                        Observable.Return(Unit.Default).InvokeCommand(NewGame);
                 }));
         }
 
@@ -52,7 +52,7 @@ namespace FutileGame.ViewModels
         private readonly ObservableAsPropertyHelper<bool> _isRoundStarted;
         public bool IsRoundStarted => _isRoundStarted.Value;
 
-        public ReactiveCommand<Unit, Unit> StartGame { get; }
+        public ReactiveCommand<Unit, Unit> NewGame { get; }
 
         public Interaction<bool, bool> GameEnded { get; } = new();
     }

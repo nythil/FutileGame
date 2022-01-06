@@ -32,7 +32,7 @@
         <views:ObjectiveBoard Grid.Column="2" Grid.Row="1" x:Name="objectiveBoard" VerticalAlignment="Top"/>
 
         <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Margin="1,1,1,5">
-            <Button x:Name="btnStartGame" Padding="3 10">Start game</Button>
+            <Button x:Name="btnNewGame" Padding="3 10">New game</Button>
         </StackPanel>
     </Grid>
 </reactiveui:ReactiveWindow>
