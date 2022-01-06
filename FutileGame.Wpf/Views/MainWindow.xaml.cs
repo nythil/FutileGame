@@ -54,22 +54,35 @@ namespace FutileGame
                     view => view.btnNewGame
                 ).DisposeWith(disposable);
 
+                this.OneWayBind(ViewModel,
+                    viewModel => viewModel.IsGameStarted,
+                    view => view.paneTimeLeft.Visibility,
+                    isStarted => isStarted ? Visibility.Visible : Visibility.Collapsed
+                ).DisposeWith(disposable);
+
+                this.OneWayBind(ViewModel,
+                    viewModel => viewModel.Round.TimeRemaining,
+                    view => view.txtTimeLeft.Text,
+                    time => time.ToString("000.00")
+                ).DisposeWith(disposable);
+
                 this.BindInteraction(ViewModel,
                     viewModel => viewModel.GameEnded,
                     context =>
                     {
-                        Dispatcher.Invoke(() =>
+                        return Dispatcher.InvokeAsync(() =>
                         {
+                            var message = context.Input ? "You win!" : "You lose!";
+                            var icon = context.Input ? MessageBoxImage.Information : MessageBoxImage.Exclamation;
                             var result = MessageBox.Show(
                                 this,
                                 "Play again?",
-                                "Victory!",
+                                message,
                                 MessageBoxButton.YesNo,
-                                MessageBoxImage.Question
+                                icon
                             );
                             context.SetOutput(result == MessageBoxResult.Yes);
-                        });
-                        return Observable.Return(Unit.Default);
+                        }).Task;
                     }
                 ).DisposeWith(disposable);
             });

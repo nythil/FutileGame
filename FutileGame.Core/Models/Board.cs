@@ -60,6 +60,7 @@ namespace FutileGame.Models
         private readonly List<Tile> _tiles;
         public IReadOnlyCollection<Tile> Tiles => _tiles.AsReadOnly();
 
+        public int CheckedCount => Tiles.Count(x => x.IsChecked);
         public bool IsAnyChecked => Tiles.Any(x => x.IsChecked);
 
         private readonly IConnectableObservable<Tile> _tileCheckedChanges;

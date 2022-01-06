@@ -31,6 +31,11 @@ namespace FutileGame.ViewModels
                 .StartWith(Round?.IsStarted ?? false)
                 .ToProperty(this, x => x.IsRoundStarted);
 
+            _isGameStarted = this
+                .WhenAnyValue(x => x.Round, (RoundViewModel r) => r is not null)
+                .StartWith(false)
+                .ToProperty(this, x => x.IsGameStarted);
+
             NewGame = ReactiveCommand.Create(() =>
             {
                 _game.StartNewRound();
@@ -38,6 +43,7 @@ namespace FutileGame.ViewModels
 
             _disposables.Add(this
                 .WhenAnyObservable(x => x.Round.IsVictoryAchievedSeq)
+                .ObserveOnDispatcher()
                 .Subscribe(async isVictory =>
                 {
                     var startNewGame = await GameEnded.Handle(isVictory);
@@ -45,6 +51,9 @@ namespace FutileGame.ViewModels
                         Observable.Return(Unit.Default).InvokeCommand(NewGame);
                 }));
         }
+
+        private readonly ObservableAsPropertyHelper<bool> _isGameStarted;
+        public bool IsGameStarted => _isGameStarted.Value;
 
         private readonly ObservableAsPropertyHelper<RoundViewModel> _round;
         public RoundViewModel Round => _round.Value;

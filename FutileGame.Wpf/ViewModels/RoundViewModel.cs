@@ -22,11 +22,23 @@ namespace FutileGame.ViewModels
 
             _isStarted = _round
                 .IsVictoryAchievedSeq.IsEmpty()
+                .ObserveOnDispatcher()
                 .ToProperty(this, x => x.IsStarted, () => true);
+
+            _timeRemaining = Observable
+                .Interval(TimeSpan.FromMilliseconds(73))
+                .Select(_ => DateTime.Now)
+                .Select(now => Math.Max(0, (_round.DueTime - now).TotalSeconds))
+                .TakeUntil(t => t == 0 || _round.IsVictoryAchieved)
+                .ObserveOnDispatcher()
+                .ToProperty(this, x => x.TimeRemaining);
         }
 
         private readonly ObservableAsPropertyHelper<bool> _isStarted;
         public bool IsStarted => _isStarted.Value;
+
+        private readonly ObservableAsPropertyHelper<double> _timeRemaining;
+        public double TimeRemaining => _timeRemaining.Value;
 
         public PlayerBoardViewModel PlayerBoard { get; }
         public ObjectiveBoardViewModel ObjectiveBoard { get; }
