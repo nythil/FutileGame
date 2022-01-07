@@ -54,10 +54,32 @@ namespace FutileGame
                     view => view.btnNewGame
                 ).DisposeWith(disposable);
 
+                this.BindCommand(ViewModel,
+                    viewModel => viewModel.Round.StartRound,
+                    view => view.btnStartRound
+                ).DisposeWith(disposable);
+
+                this.WhenAnyObservable(x => x.ViewModel.Round.StartRound.CanExecute)
+                    .StartWith(false)
+                    .Select(ConvertVisibility)
+                    .BindTo(this, x => x.btnStartRound.Visibility)
+                    .DisposeWith(disposable);
+
+                this.BindCommand(ViewModel,
+                    viewModel => viewModel.Round.PauseRound,
+                    view => view.btnPauseRound
+                ).DisposeWith(disposable);
+
+                this.WhenAnyObservable(x => x.ViewModel.Round.PauseRound.CanExecute)
+                    .StartWith(false)
+                    .Select(ConvertVisibility)
+                    .BindTo(this, x => x.btnPauseRound.Visibility)
+                    .DisposeWith(disposable);
+
                 this.OneWayBind(ViewModel,
                     viewModel => viewModel.IsGameStarted,
                     view => view.paneTimeLeft.Visibility,
-                    isStarted => isStarted ? Visibility.Visible : Visibility.Collapsed
+                    ConvertVisibility
                 ).DisposeWith(disposable);
 
                 this.OneWayBind(ViewModel,
@@ -86,6 +108,11 @@ namespace FutileGame
                     }
                 ).DisposeWith(disposable);
             });
+        }
+
+        static Visibility ConvertVisibility(bool isVisible)
+        {
+            return isVisible ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }

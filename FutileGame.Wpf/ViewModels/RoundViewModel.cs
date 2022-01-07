@@ -21,9 +21,9 @@ namespace FutileGame.ViewModels
             ObjectiveBoard = new ObjectiveBoardViewModel(_round.ObjectiveBoard, valueFormatter);
 
             _isStarted = _round
-                .IsVictoryAchievedSeq.IsEmpty()
+                .IsStartedSeq
                 .ObserveOnDispatcher()
-                .ToProperty(this, x => x.IsStarted, () => true);
+                .ToProperty(this, x => x.IsStarted);
 
             _timeRemaining = Observable
                 .Interval(TimeSpan.FromMilliseconds(73))
@@ -31,7 +31,20 @@ namespace FutileGame.ViewModels
                 .TakeUntil(t => t == 0 || _round.IsVictoryAchieved)
                 .ObserveOnDispatcher()
                 .ToProperty(this, x => x.TimeRemaining);
+
+            StartRound = ReactiveCommand.Create(
+                canExecute: this.WhenAnyValue(self => self.IsStarted, b => !b && _round.GetRemainingTime() > 0),
+                execute: () => { _round.Start(); }
+            );
+
+            PauseRound = ReactiveCommand.Create(
+                canExecute: this.WhenAnyValue(self => self.IsStarted),
+                execute: () => { _round.Pause(); }
+            );
         }
+
+        public ReactiveCommand<Unit, Unit> StartRound { get; }
+        public ReactiveCommand<Unit, Unit> PauseRound { get; }
 
         private readonly ObservableAsPropertyHelper<bool> _isStarted;
         public bool IsStarted => _isStarted.Value;

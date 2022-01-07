@@ -33,6 +33,9 @@
 
         <DockPanel Grid.Column="0" Grid.Row="0" Margin="1,1,1,5">
             <Button x:Name="btnNewGame" Padding="3 10">New game</Button>
+            <Rectangle Width="10"/>
+            <Button x:Name="btnStartRound" Padding="3 10" MinWidth="50">Start</Button>
+            <Button x:Name="btnPauseRound" Padding="3 10" MinWidth="50">Pause</Button>
             <StackPanel x:Name="paneTimeLeft" Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock VerticalAlignment="Bottom" TextAlignment="Left" FontSize="18" Text="Time left: "/>
                 <TextBlock x:Name="txtTimeLeft" VerticalAlignment="Bottom" TextAlignment="Right" MinWidth="57" FontSize="18" Text="000,00"/>

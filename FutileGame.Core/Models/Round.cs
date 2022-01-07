@@ -18,7 +18,6 @@ namespace FutileGame.Models
             PlayerBoard = Board.EmptyLike(ObjectiveBoard);
 
             _timer = new(ObjectiveBoard.CheckedCount * kTimePerTile);
-            _timer.Start();
 
             IsVictoryAchievedSeq = PlayerBoard
                 .TileCheckedChanges
@@ -35,5 +34,11 @@ namespace FutileGame.Models
         public IObservable<bool> IsVictoryAchievedSeq { get; }
 
         public double GetRemainingTime() => _timer.GetRemainingTime();
+
+        public void Start() => _timer.Start();
+        public void Pause() => _timer.Pause();
+
+        public bool IsStarted => _timer.IsStarted;
+        public IObservable<bool> IsStartedSeq => _timer.IsStartedSeq;
     }
 }
