@@ -98,7 +98,7 @@ namespace FutileGame
                             var icon = context.Input ? MessageBoxImage.Information : MessageBoxImage.Exclamation;
                             var result = MessageBox.Show(
                                 this,
-                                "Play again?",
+                                "Another round?",
                                 message,
                                 MessageBoxButton.YesNo,
                                 icon
