@@ -60,6 +60,11 @@ namespace FutileGame.Models
                 return;
             if (_remainingTime <= 0)
                 throw new InvalidOperationException("no time left");
+            RestartInternal();
+        }
+
+        private void RestartInternal()
+        {
             var dueTime = DateTimeOffset.Now + TimeSpan.FromSeconds(_remainingTime);
             _dueTimeSeq.OnNext(dueTime);
         }
@@ -84,6 +89,22 @@ namespace FutileGame.Models
             _remainingTime = remainingTime;
             _dueTimeSeq.OnNext(null);
             _dueTimeSeq.OnCompleted();
+        }
+
+        public void Decrement(double amount)
+        {
+            var newRemainingTime = GetRemainingTime() - amount;
+            if (newRemainingTime <= 0)
+            {
+                StopInternal(0);
+                return;
+            }
+            _remainingTime = newRemainingTime;
+
+            if (IsStarted)
+            {
+                RestartInternal();
+            }
         }
     }
 }

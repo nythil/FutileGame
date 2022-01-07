@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
 namespace FutileGame.Models
@@ -8,8 +9,10 @@ namespace FutileGame.Models
     public sealed class Round
     {
         private const int kTimePerTile = 3;
+        private const int kUncheckPenalty = 4;
 
         private readonly CountdownTimer _timer;
+        private readonly SingleAssignmentDisposable _uncheckPenaltySub = new();
 
         public Round(Board objectiveBoard)
         {
@@ -25,6 +28,11 @@ namespace FutileGame.Models
                 .Any(_ => IsVictoryAchieved)
                 .Do(_ => _timer.Stop())
                 .Amb(_timer.TimeoutSeq.Select(_ => false));
+
+            _uncheckPenaltySub.Disposable = PlayerBoard
+                .TileCheckedChanges
+                .Where(t => !t.IsChecked)
+                .Subscribe(_ => _timer.Decrement(kUncheckPenalty));
         }
 
         public Board ObjectiveBoard { get; }
