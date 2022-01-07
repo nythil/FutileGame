@@ -47,6 +47,8 @@ namespace FutileGame.Models
         public bool IsStarted => _dueTimeSeq.Value is not null;
         public IObservable<bool> IsStartedSeq => _dueTimeSeq.Select(_ => IsStarted);
 
+        public bool IsStopped => _dueTimeSeq.Select(_ => false).Append(true).Take(1).Wait();
+
         /// <summary>
         /// Completes with a single item when time runs out.
         /// </summary>

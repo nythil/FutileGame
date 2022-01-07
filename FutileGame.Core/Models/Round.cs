@@ -40,5 +40,7 @@ namespace FutileGame.Models
 
         public bool IsStarted => _timer.IsStarted;
         public IObservable<bool> IsStartedSeq => _timer.IsStartedSeq;
+
+        public bool IsFinished => _timer.IsStopped;
     }
 }
