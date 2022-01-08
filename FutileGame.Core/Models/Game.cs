@@ -35,6 +35,7 @@ namespace FutileGame.Models
             var numSteps = RowCount * ColumnCount / 2 + 1;
             var objective = _objectiveGenerator.Generate(RowCount, ColumnCount, numSteps);
             this.Round = new(objective);
+            this.Round.Start();
         }
     }
 }
