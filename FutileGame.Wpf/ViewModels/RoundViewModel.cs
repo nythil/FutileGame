@@ -31,12 +31,12 @@ namespace FutileGame.ViewModels
                 .ToProperty(this, x => x.TimeRemaining);
 
             StartRound = ReactiveCommand.Create(
-                canExecute: this.WhenAnyValue(self => self.IsStarted, isStarted => !isStarted && !_round.IsFinished),
+                canExecute: _round.IsStartedSeq.Select(isStarted => !isStarted).Append(false).ObserveOnDispatcher(),
                 execute: () => { _round.Start(); }
             );
 
             PauseRound = ReactiveCommand.Create(
-                canExecute: this.WhenAnyValue(self => self.IsStarted),
+                canExecute: _round.IsStartedSeq.ObserveOnDispatcher(),
                 execute: () => { _round.Pause(); }
             );
         }
