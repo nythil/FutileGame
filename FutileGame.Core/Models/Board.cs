@@ -66,7 +66,7 @@ namespace FutileGame.Models
         private readonly IConnectableObservable<Tile> _tileCheckedChanges;
         public IObservable<Tile> TileCheckedChanges => _tileCheckedChanges;
 
-        public Tile GetTile(int row, int column)
+        public Tile? GetTile(int row, int column)
         {
             if ((0 <= row && row < RowCount) && (0 <= column && column < ColumnCount))
             {
@@ -77,7 +77,7 @@ namespace FutileGame.Models
             return null;
         }
 
-        private IEnumerable<Tile> GetNeighbours(Tile tile)
+        private IEnumerable<Tile?> GetNeighbours(Tile tile)
         {
             var row = tile.RowIndex;
             var column = tile.ColumnIndex;
@@ -92,9 +92,9 @@ namespace FutileGame.Models
             _tiles.ForEach(t => t.Freeze());
         }
 
-        public override bool Equals(object obj) => Equals(obj as Board);
+        public override bool Equals(object? obj) => Equals(obj as Board);
 
-        public bool Equals(Board other)
+        public bool Equals(Board? other)
         {
             return other != null &&
                    RowCount == other.RowCount &&

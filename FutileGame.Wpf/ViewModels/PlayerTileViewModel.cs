@@ -13,14 +13,12 @@ namespace FutileGame.ViewModels
         private readonly Tile _model;
         private readonly ITileValueFormatter _valueFormatter;
 
-        public PlayerTileViewModel(Tile m, ITileValueFormatter valueFormatter = null)
+        public PlayerTileViewModel(Tile m, ITileValueFormatter? valueFormatter = null)
         {
-            _model = m;
-            _valueFormatter = valueFormatter ?? Locator.Current.GetService<ITileValueFormatter>();
-            if (_model is null)
-                throw new ArgumentNullException(nameof(m));
-            if (_valueFormatter is null)
-                throw new ArgumentNullException(nameof(valueFormatter));
+            _model = m ?? throw new ArgumentNullException(nameof(m));
+            _valueFormatter = valueFormatter
+                ?? Locator.Current.GetService<ITileValueFormatter>()
+                ?? throw new ArgumentNullException(nameof(valueFormatter));
 
             _text = _model.ValueChanges
                 .Select(t => _valueFormatter.FormatValue(t))

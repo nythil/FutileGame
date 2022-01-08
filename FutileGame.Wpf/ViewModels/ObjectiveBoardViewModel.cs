@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Disposables;
 using System.Diagnostics;
 using ReactiveUI;
@@ -12,14 +13,9 @@ namespace FutileGame.ViewModels
     {
         private readonly Board _model;
 
-        public ObjectiveBoardViewModel(int numRows, int numColumns, ITileValueFormatter valueFormatter = null)
-            : this(new Board(numRows, numColumns), valueFormatter)
+        public ObjectiveBoardViewModel(Board model, ITileValueFormatter? valueFormatter = null)
         {
-        }
-
-        public ObjectiveBoardViewModel(Board model, ITileValueFormatter valueFormatter = null)
-        {
-            _model = model;
+            _model = model ?? throw new ArgumentNullException(nameof(model));
             _tiles = _model.Tiles.Select(sq => new ObjectiveTileViewModel(sq, valueFormatter)).ToList();
         }
 

@@ -16,10 +16,10 @@ namespace FutileGame.ViewModels
         private readonly Game _game;
         private readonly CompositeDisposable _disposables = new();
 
-        public MainWindowViewModel(int numRows, int numColumns, ITileValueFormatter valueFormatter = null, IObjectiveGenerator objectiveGenerator = null)
+        public MainWindowViewModel(int numRows, int numColumns, ITileValueFormatter? valueFormatter = null, IObjectiveGenerator? objectiveGenerator = null)
         {
-            objectiveGenerator ??= Locator.Current.GetService<IObjectiveGenerator>();
-            valueFormatter ??= Locator.Current.GetService<ITileValueFormatter>();
+            objectiveGenerator ??= Locator.Current.GetService<IObjectiveGenerator>()
+                ?? throw new ArgumentNullException(nameof(objectiveGenerator));
             _game = new Game(numRows, numColumns, objectiveGenerator);
 
             _round = _game.RoundChanges
@@ -27,12 +27,12 @@ namespace FutileGame.ViewModels
                 .ToProperty(this, x => x.Round);
 
             _isRoundStarted = this
-                .WhenAnyValue(x => x.Round.IsStarted)
+                .WhenAnyValue(x => x.Round!.IsStarted)
                 .StartWith(Round?.IsStarted ?? false)
                 .ToProperty(this, x => x.IsRoundStarted);
 
             _isGameStarted = this
-                .WhenAnyValue(x => x.Round, (RoundViewModel r) => r is not null)
+                .WhenAnyValue(x => x.Round, (RoundViewModel? r) => r is not null)
                 .StartWith(false)
                 .ToProperty(this, x => x.IsGameStarted);
 
@@ -42,7 +42,7 @@ namespace FutileGame.ViewModels
             });
 
             _disposables.Add(this
-                .WhenAnyObservable(x => x.Round.IsVictoryAchievedSeq)
+                .WhenAnyObservable(x => x.Round!.IsVictoryAchievedSeq)
                 .ObserveOnDispatcher()
                 .Subscribe(async isVictory =>
                 {
@@ -55,8 +55,8 @@ namespace FutileGame.ViewModels
         private readonly ObservableAsPropertyHelper<bool> _isGameStarted;
         public bool IsGameStarted => _isGameStarted.Value;
 
-        private readonly ObservableAsPropertyHelper<RoundViewModel> _round;
-        public RoundViewModel Round => _round.Value;
+        private readonly ObservableAsPropertyHelper<RoundViewModel?> _round;
+        public RoundViewModel? Round => _round.Value;
 
         private readonly ObservableAsPropertyHelper<bool> _isRoundStarted;
         public bool IsRoundStarted => _isRoundStarted.Value;

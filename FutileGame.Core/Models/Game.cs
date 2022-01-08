@@ -12,9 +12,7 @@ namespace FutileGame.Models
 
         public Game(int numRows, int numColumns, IObjectiveGenerator objectiveGenerator)
         {
-            _objectiveGenerator = objectiveGenerator;
-            if (_objectiveGenerator is null)
-                throw new ArgumentNullException(nameof(objectiveGenerator));
+            _objectiveGenerator = objectiveGenerator ?? throw new ArgumentNullException(nameof(objectiveGenerator));
             RowCount = numRows;
             ColumnCount = numColumns;
             _roundChanges = new(null);
@@ -23,14 +21,14 @@ namespace FutileGame.Models
         public int RowCount { get; }
         public int ColumnCount { get; }
 
-        public Round Round
+        public Round? Round
         {
             get => _roundChanges.Value;
             private set => _roundChanges.OnNext(value);
         }
 
-        private readonly BehaviorSubject<Round> _roundChanges;
-        public IObservable<Round> RoundChanges => _roundChanges.AsObservable();
+        private readonly BehaviorSubject<Round?> _roundChanges;
+        public IObservable<Round?> RoundChanges => _roundChanges.AsObservable();
 
         public void StartNewRound()
         {

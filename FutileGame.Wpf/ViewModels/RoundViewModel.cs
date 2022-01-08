@@ -11,11 +11,9 @@ namespace FutileGame.ViewModels
     {
         private readonly Round _round;
 
-        public RoundViewModel(Round round, ITileValueFormatter valueFormatter = null)
+        public RoundViewModel(Round round, ITileValueFormatter? valueFormatter = null)
         {
-            _round = round;
-            if (_round is null)
-                throw new ArgumentNullException(nameof(round));
+            _round = round ?? throw new ArgumentNullException(nameof(round));
 
             PlayerBoard = new PlayerBoardViewModel(_round.PlayerBoard, valueFormatter);
             ObjectiveBoard = new ObjectiveBoardViewModel(_round.ObjectiveBoard, valueFormatter);

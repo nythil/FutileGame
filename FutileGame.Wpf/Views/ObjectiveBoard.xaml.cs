@@ -28,7 +28,6 @@ namespace FutileGame.Views
         public ObjectiveBoard()
         {
             InitializeComponent();
-            ViewModel = new(5, 5, new DefaultTileValueFormatter());
 
             this.WhenActivated(disposables =>
             {

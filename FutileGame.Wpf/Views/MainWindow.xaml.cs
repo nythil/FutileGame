@@ -30,12 +30,12 @@ namespace FutileGame
         public MainWindow()
         {
             InitializeComponent();
-            ViewModel = new MainWindowViewModel(5, 5, new DefaultTileValueFormatter());
+            ViewModel = new MainWindowViewModel(5, 5);
 
             this.WhenActivated(disposable =>
             {
                 this.OneWayBind(ViewModel,
-                    viewModel => viewModel.Round.PlayerBoard,
+                    viewModel => viewModel.Round!.PlayerBoard,
                     view => view.playerBoard.ViewModel
                 ).DisposeWith(disposable);
 
@@ -45,7 +45,7 @@ namespace FutileGame
                 ).DisposeWith(disposable);
 
                 this.OneWayBind(ViewModel,
-                    viewModel => viewModel.Round.ObjectiveBoard,
+                    viewModel => viewModel.Round!.ObjectiveBoard,
                     view => view.objectiveBoard.ViewModel
                 ).DisposeWith(disposable);
 
@@ -55,22 +55,22 @@ namespace FutileGame
                 ).DisposeWith(disposable);
 
                 this.BindCommand(ViewModel,
-                    viewModel => viewModel.Round.StartRound,
+                    viewModel => viewModel.Round!.StartRound,
                     view => view.btnStartRound
                 ).DisposeWith(disposable);
 
-                this.WhenAnyObservable(x => x.ViewModel.Round.StartRound.CanExecute)
+                this.WhenAnyObservable(x => x.ViewModel!.Round!.StartRound.CanExecute)
                     .StartWith(false)
                     .Select(ConvertVisibility)
                     .BindTo(this, x => x.btnStartRound.Visibility)
                     .DisposeWith(disposable);
 
                 this.BindCommand(ViewModel,
-                    viewModel => viewModel.Round.PauseRound,
+                    viewModel => viewModel.Round!.PauseRound,
                     view => view.btnPauseRound
                 ).DisposeWith(disposable);
 
-                this.WhenAnyObservable(x => x.ViewModel.Round.PauseRound.CanExecute)
+                this.WhenAnyObservable(x => x.ViewModel!.Round!.PauseRound.CanExecute)
                     .StartWith(false)
                     .Select(ConvertVisibility)
                     .BindTo(this, x => x.btnPauseRound.Visibility)
@@ -83,7 +83,7 @@ namespace FutileGame
                 ).DisposeWith(disposable);
 
                 this.OneWayBind(ViewModel,
-                    viewModel => viewModel.Round.TimeRemaining,
+                    viewModel => viewModel.Round!.TimeRemaining,
                     view => view.txtTimeLeft.Text,
                     time => time.ToString("000.00")
                 ).DisposeWith(disposable);

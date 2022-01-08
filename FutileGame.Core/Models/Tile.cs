@@ -72,9 +72,9 @@ namespace FutileGame.Models
             _valueChanges.OnCompleted();
         }
 
-        public override bool Equals(object obj) => Equals(obj as Tile);
+        public override bool Equals(object? obj) => Equals(obj as Tile);
 
-        public bool Equals(Tile other)
+        public bool Equals(Tile? other)
         {
             return other != null &&
                    RowIndex == other.RowIndex &&

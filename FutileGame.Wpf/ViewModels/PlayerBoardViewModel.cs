@@ -13,14 +13,9 @@ namespace FutileGame.ViewModels
     {
         private readonly Board _model;
 
-        public PlayerBoardViewModel(int numRows, int numColumns, ITileValueFormatter valueFormatter = null)
-            : this(new Board(numRows, numColumns), valueFormatter)
+        public PlayerBoardViewModel(Board model, ITileValueFormatter? valueFormatter = null)
         {
-        }
-
-        public PlayerBoardViewModel(Board model, ITileValueFormatter valueFormatter = null)
-        {
-            _model = model;
+            _model = model ?? throw new ArgumentNullException(nameof(model));
             _tiles = _model.Tiles.Select(sq => new PlayerTileViewModel(sq, valueFormatter)).ToList();
         }
 
