@@ -44,8 +44,10 @@ namespace FutileGame.Models
             return _remainingTime;
         }
 
+        public IObservable<double> RemainingTimeLeapSeq => _dueTimeSeq.Select(_ => GetRemainingTime());
+
         public bool IsStarted => _dueTimeSeq.Value is not null;
-        public IObservable<bool> IsStartedSeq => _dueTimeSeq.Select(_ => IsStarted);
+        public IObservable<bool> IsStartedSeq => _dueTimeSeq.Select(_ => IsStarted).DistinctUntilChanged();
 
         public bool IsStopped => _dueTimeSeq.Select(_ => false).Append(true).Take(1).Wait();
 

@@ -42,6 +42,7 @@ namespace FutileGame.Models
         public IObservable<bool> IsVictoryAchievedSeq { get; }
 
         public double GetRemainingTime() => _timer.GetRemainingTime();
+        public IObservable<double> RemainingTimeLeapSeq => _timer.RemainingTimeLeapSeq;
 
         public void Start() => _timer.Start();
         public void Pause() => _timer.Pause();
