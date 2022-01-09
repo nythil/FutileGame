@@ -88,6 +88,17 @@ namespace FutileGame
                     time => time.ToString("000.00")
                 ).DisposeWith(disposable);
 
+                this.OneWayBind(ViewModel,
+                    viewModel => viewModel.Score,
+                    view => view.txtScoreValue.Text
+                ).DisposeWith(disposable);
+
+                this.OneWayBind(ViewModel,
+                    viewModel => viewModel.IsGameStarted,
+                    view => view.txtScore.Visibility,
+                    ConvertVisibility
+                ).DisposeWith(disposable);
+
                 this.BindInteraction(ViewModel,
                     viewModel => viewModel.GameEnded,
                     context =>

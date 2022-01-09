@@ -36,6 +36,10 @@ namespace FutileGame.ViewModels
                 .StartWith(false)
                 .ToProperty(this, x => x.IsGameStarted);
 
+            _score = _game
+                .ScoreSeq
+                .ToProperty(this, x => x.Score);
+
             NewGame = ReactiveCommand.Create(() =>
             {
                 _game.StartNewRound();
@@ -60,6 +64,9 @@ namespace FutileGame.ViewModels
 
         private readonly ObservableAsPropertyHelper<bool> _isRoundStarted;
         public bool IsRoundStarted => _isRoundStarted.Value;
+
+        private readonly ObservableAsPropertyHelper<int> _score;
+        public int Score => _score.Value;
 
         public ReactiveCommand<Unit, Unit> NewGame { get; }
 

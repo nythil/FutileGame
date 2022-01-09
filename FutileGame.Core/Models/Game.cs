@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using FutileGame.Services;
@@ -9,6 +10,7 @@ namespace FutileGame.Models
     public sealed class Game
     {
         private readonly IObjectiveGenerator _objectiveGenerator;
+        private readonly SingleAssignmentDisposable _roundEndSub = new();
 
         public Game(int numRows, int numColumns, IObjectiveGenerator objectiveGenerator)
         {
@@ -16,6 +18,16 @@ namespace FutileGame.Models
             RowCount = numRows;
             ColumnCount = numColumns;
             _roundChanges = new(null);
+
+            _roundEndSub.Disposable = _roundChanges
+                .Where(r => r is not null)
+                .Select(r => r!.IsVictoryAchievedSeq)
+                .Switch()
+                .TakeWhile(isVictory => isVictory)
+                .Subscribe(
+                    _ => Score += (int)Math.Ceiling(Round!.GetRemainingTime()),
+                    () => _roundChanges.OnCompleted()
+                );
         }
 
         public int RowCount { get; }
@@ -29,6 +41,15 @@ namespace FutileGame.Models
 
         private readonly BehaviorSubject<Round?> _roundChanges;
         public IObservable<Round?> RoundChanges => _roundChanges.AsObservable();
+
+        private readonly BehaviorSubject<int> _score = new(0);
+        public int Score
+        {
+            get => _score.Value;
+            private set => _score.OnNext(value);
+        }
+
+        public IObservable<int> ScoreSeq => _score.AsObservable();
 
         public void StartNewRound()
         {
